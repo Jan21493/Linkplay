@@ -13,7 +13,12 @@ wget -O /tmp/busybox -T 5 http://10.1.1.22/a31/busybox -q;
 /bin/chmod 777 /tmp/busybox;
 /tmp/busybox telnetd -l/bin/ash
 ```
-The tool **_"busybox"_** is like a swiss army knife and combines a lot of CLI commands in a single binary file. That file was stripped down already in my version and does not include a telnetd anymore. Therefore you have to get a full version from somewhere. Fortunately 
+The tool **_"busybox"_** is like a swiss army knife and combines a lot of CLI commands in a single binary file. That file was stripped down already in my version and does not include a telnetd anymore. Therefore you have to get a full version from somewhere. A version of busybox is provided here:
+
+There is an OpenWRT archive where you can get precompiled binaries for almost all utilities you may need:
+https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/
+
+The binaries are included in packages
 
 
 ```
