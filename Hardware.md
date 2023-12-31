@@ -21,6 +21,7 @@ VCEI exceptions         : not available
 Here are some useful links go get more information about the hardware:
 https://openwrt.org/docs/techref/hardware/soc/soc.mediatek
 https://openwrt.org/docs/techref/instructionset/mipsel_24kc
+https://www.linkplay.com/modules-wi-fi-2
 
 There is an OpenWRT archive where you can get precompiled binaries for almost all utilities you may need:
 https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/
@@ -29,7 +30,7 @@ https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/
 
 The binaries are included in packages, so you have to find out which packages includes a specific binary. A list of packages can be found here: https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/Packages
 
-Here's an example how to download a package and get the binaries from it for a SSH server (dropbear). The commands were executed from a terminal window on my MacBook:
+Here's an example how to download a package and get the binaries from it for a SSH server (dropbear). The commands were executed from a terminal window on my MacMini:
 
 ```
 cd ~/Downloads
@@ -70,7 +71,7 @@ dropbear -r /tmp/rsa_host_key
 ```
 Log in with ssh from remote by using username admin, password admin
 
-I tried to install a sftp server on my Up2Stream device to be able to add the file system via sshfs from my MacBook, but it's not working so far. Here are the commands that I've used: 
+I tried to install a sftp server on my Up2Stream device to be able to add the file system via sshfs from my MacMini, but it's not working so far. Here are the commands that I've used: 
 ```
 cd ~/Downloads
 curl 'https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/packages/packages/openssh-sftp-server_7.1p2-1_ramips_24kec.ipk' -o openssh-sftp-server_7.1p2-1_ramips_24kec.ipk
@@ -90,7 +91,7 @@ wget -O /tmp/bin/sftp-server -T 5 'http://10.1.1.22/a31/sftp-server'
 chmod 777 /tmp/bin/sftp-server
 ```
 
-Goal was to mount the Up2Stream device on my MacBook with sshfs:
+Goal was to mount the Up2Stream device on my MacMini with sshfs:
 ```
 sshfs -C -o volname=up2stream -p 22 -o allow_other -o sftp_server=/tmp/bin/sftp-server admin@10.1.1.52:/ ~/Volumes/up2stream
 ```

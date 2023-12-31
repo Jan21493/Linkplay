@@ -19,12 +19,13 @@ Reverse Engineering by Crymeiriver:
 https://github.com/Crymeiriver/LS150/blob/master/README.md
 
 ## Enable telnetd
-To get started exploring these devices, a security vulnerability had to be exploited to install a telnetd.
+To get started exploring these devices, a security vulnerability had to be exploited to install a telnetd. [Enable telnetd](/TELNETD.md)
 
 ## Hardware and Firmware
-More information about the hardware
+More information about the hardware and Firmware, file systems, including information how to add binary files the device. [Hardware and Firmware](/Hardware.md)
 
-## 
+## Reverse Engineering
+Information about the boot process, file systems including environment (NVRAM). [Reverse Engineering](/boot-process.md)
 
 ## Downgrade Firmware
-The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020). That version still has some vulnerabilites to be able to get onto the CLI with telnet by pushing a single command to these devices. Although it is good when the vendor is providing upgrades with additional feature and security fixes, I'd still like to be able to "hack" into the CLI. Therefore I had to downgrade the firmware.
+The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020). That version still has some vulnerabilites to be able to get onto the CLI with telnet by pushing a single command to these devices. Although it is good when the vendor is providing upgrades with additional feature and security fixes, I'd still like to be able to "hack" into the CLI. Therefore I had to downgrade the firmware. [Downgrade Firmware](/Downgrade.md)
