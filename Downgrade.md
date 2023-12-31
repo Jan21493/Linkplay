@@ -1,22 +1,22 @@
 # Downgrade Firmware
 In recent versions Arylic has fixed several vulnerabilities and I have not found a way to "hack" into the CLI anymore. Telnet acces was still possible with version 4.2.8020 from 2020/02/20 (20th of Feb 2020) that was installed when I had bought the first devices.
 
-The following information is specific for Arylic Up2Stream Amp v2 and Up2Stream Pro v3, but might also help for other devices.
+The following information is specific for Arylic Up2Stream Amp v2 and Up2Stream Pro v3, but might also helpful for other devices, especially if they are also based on the Linkplay A31 module.
 
 ## Firmware Upgrade
-Before we are able to downgrade the software, it is important to understand the firmware upgrade process.
+Before we are able to downgrade the software, it is important to understand how the firmware upgrade process works.
 
 The URL to the upgrade server can be retrieved via API:
 ```
 curl http://10.1.1.52/httpapi.asp?command=GetUpdateServer
-# my device responds with http://silenceota.linkplay.com/wifi_audio_image
+# my device responds with: http://silenceota.linkplay.com/wifi_audio_image
 ```
 
-With Wireshark I have sniffed how the upgrade process is working and which files are required. At first the device gets a list of all (or many) Linkplay products 
+With Wireshark I have sniffed how the upgrade process is working and which files are required. At first the device gets a list of all (or at least many) Linkplay products 
 ```
 curl -O http://silenceota.linkplay.com/wifi_audio_image/products.xml 
 ```
-The XML file contains a list of products with their ID and some information including an URL for specific information. The example contains the two devices listed above (list was retrieved in Oct 2020):
+The XML file contains a list of products with their ID and more, including an URL for specific information. The example contains the two devices listed above (list was retrieved in Oct 2020):
 ```
 <productList>
 ...
@@ -36,14 +36,17 @@ http://ota.rakoit.com/release/RP0011_WB60/product.xml
 The following table lists some of the IDs
 | Product ID  | Description |
 | --------------- | ------------- |
-| RP0011_WB60 | Arylic WiFi and Bluetooth 5.0 HiFi Stereo Amplifier Board Up2Stream amp 2.0 |
-| RP0011_WB60_S | Arylic A30 Pro  |
+| RP0011_WB60 | Arylic WiFi and Bluetooth 5.0 HiFi Stereo Amplifier Board Up2Stream Amp 2.0 |
+| RP0011_WB60_S | Arylic A30 Pro and newer internal version of Up2Stream Amp v2.0 |
 | RP0016_S50PRO_S | Arylic S50 Pro  |
 | UP2STREAM_PRO_V3 | Arylic Up2Stream Pro v3 |
 
 ```
 curl -O http://ota.rakoit.com/release/RP0011_WB60/product.xml
 ```
+> **Note:**
+> In previous versions the **_product.xml_** was also retrieved from silenceota.linkplay.com/wifi_audio_image and stored in the same directory as the images below.
+
 The example was downloaded in Oct 2020:
 ```
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -69,14 +72,14 @@ The example was downloaded in Oct 2020:
 The URLs include a "random" ID that might be mapped to the product ID and a subdirectory with the version (date) for some files. The MCU files follow a different structure with the product ID used as a subdirectory  and a version number that is included in the name of the image.
 | XML ID  | Subdirectory | Description |
 | --------------- | ------------- | ------------- |
-| <md5-url> | <major-version> | plain text file with MD5 checksums for image files (uBoot, backup, user2, kernel)  |
-| <ver-url> | <major-version> | plain text file with version information and release date |
-| <layout-url> | <major-version> | plain text file with layout (e.g. offset, size, version, fstype, name, size) of file system in flash (user2, user, kernel) |
-| <image-kernel> | <major-version> | main binary image for kernel |
-| <image-user> | <major-version> | image for user file system (persistent) |
-| <image-user2> | <major-version> | image for user file system (persistent) |
-| <image-uboot> | - | boot loader uBoot |
-| <image-backup> | - | backup image |
+| md5-url | major-version | plain text file with MD5 checksums for image files (uBoot, backup, user2, kernel)  |
+| ver-url | major-version | plain text file with version information and release date |
+| layout-url | major-version | plain text file with layout (e.g. offset, size, version, fstype, name, size) of file system in flash (user2, user, kernel) |
+| image-kernel | major-version | main binary image for kernel |
+| image-user | major-version | image for user file system (persistent) |
+| image-user2 | major-version | image for user file system (persistent) |
+| image-uboot | - | boot loader uBoot |
+| image-backup | - | backup image |
 
 I'm not sure if the **<sign>** tag is used. I've modified the URLs (different FQDN and path) and got no error. Only the following files are downloaded during an upgrade (verified with Up2Stream Amp v2.0):
 | URL | Description |
@@ -201,7 +204,7 @@ Modify the release date in the **_MVver_20200220_** file (6th line) with the sam
 
 Here is an example of the modified  **_MVver_20200220_** file:
 ```
- WiiMu.4.2.8827
+WiiMu.4.2.8827
 WiiMu
 WiiMu-A31
 a31rakoit
