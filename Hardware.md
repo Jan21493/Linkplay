@@ -1,4 +1,4 @@
-# Hardware
+# Hardware and Firmware
 The specs for the Linkplay A31 module are as follows
 ```
 # cat /proc/cpuinfo
@@ -29,7 +29,7 @@ https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/
 
 The binaries are included in packages, so you have to find out which packages includes a specific binary. A list of packages can be found here: https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/Packages
 
-Here's an example how to download a package and get the binaries from it for a SSH server (dropbear):
+Here's an example how to download a package and get the binaries from it for a SSH server (dropbear). The commands were executed from a terminal window on my MacBook:
 
 ```
 cd ~/Downloads
@@ -137,4 +137,23 @@ wget -O /tmp/file -T 5 'http://10.1.1.22/a31/file';/bin/chmod 777 /tmp/file
 
 # on Up2Stream device:
 wget -O /tmp/strings -T 5 'http://10.1.1.22/a31/strings';/bin/chmod 777 /tmp/strings
+```
+Here are some code snippets from a script on the device (can't remember any details). It looks that the commands for NTP are not working anymore, also the commands to switch power for the WiFi interface off:
+```
+srv=`nvram_get 2860 NTPServerIP`
+sync=`nvram_get 2860 NTPSync`
+tz=`nvram_get 2860 TZ`
+nvram_set 2860 TZ 
+
+nvram_set 2860 RadioOn 0
+nvram_set 2860 ApCliEnable 0
+--> blinking LED, but apcli0 and ra0 still enabled after reboot
+
+nvram_set 2860 TxPower 0 or 1
+--> no effect
+```
+You can turn the WiFi interface and the internal access point off with the following commands:
+```
+ifconfig ra0 down
+ifconfig apcli0 down
 ```

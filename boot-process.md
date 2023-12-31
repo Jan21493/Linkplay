@@ -50,29 +50,41 @@ https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/
 and
 https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/packages/
 
-
-Example to download the tools from the OpenWRT version Chaos Calmer:
------------------------------------------------
-uboot-envtools_2014.10-2_ramips_24kec.ipk
-
+Here's an example how to download a package from the Open WRT archive and get the binaries from it to show the environment. The commands were executed from a terminal window on my MacBook:
+```
+cd ~/Downloads
+curl 'https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/packages/base/uboot-envtools_2014.10-2_ramips_24kec.ipk' -o uboot-envtools_2014.10-2_ramips_24kec.ipk
 mkdir uboot-envtools_2014.10-2_ramips_24kec
 cd uboot-envtools_2014.10-2_ramips_24kec
 tar zxpvf ../uboot-envtools_2014.10-2_ramips_24kec.ipk
 tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
-
-wget -O /tmp/fw_printenv -T 5 'http://10.1.1.22/a31/fw_printenv';/bin/chmod 777 /tmp/fw_printenv
-ln -s /tmp/fw_printenv /tmp/fw_setenv
-
+# copy dropbear binary to a subdirectory on your webserver
+cp usr/sbin/fw_printenv /Library/WebServer/Documents/a31/
+# you may open finder to search for additional information in the package
+open .
+```
+In the next step you can you can download and install the tool on the Up2Stream device (telnetd already installed):
+``` 
+cd /tmp
+mkdir /tmp/bin
+wget -O /tmp/bin/fw_printenv -T 5 'http://10.1.1.22/a31/fw_printenv'
+chmod 777 /tmp/bin/fw_printenv
+ln -s /tmp/bin/fw_printenv /tmp/bin/fw_setenv
+```
+and the same for dmesg:
+```
+cd ~/Downloads
 curl 'https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/packages/base/dmesg_2.25.2-4_ramips_24kec.ipk' -o dmesg_2.25.2-4_ramips_24kec.ipk
 mkdir dmesg_2.25.2-4_ramips_24kec
 cd dmesg_2.25.2-4_ramips_24kec
 tar zxpvf ../dmesg_2.25.2-4_ramips_24kec.ipk
 tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
-open .
-# copy ./usr/sbin/dmesg to your webserver, e.g. /Library/WebServer/Documents/a31
-on Up2Stream device:
+cp ./usr/sbin/dmesg /Library/WebServer/Documents/a31
+```
+Installit on the Up2Stream device and dig for some useful information:
+```
 wget -O /tmp/dmesg -T 5 'http://10.1.1.22/a31/dmesg';/bin/chmod 777 /tmp/dmesg
 
 cat /proc/version
@@ -127,41 +139,37 @@ mtd9: 00200000 00010000 "user2"
 [    0.700000] 0x000000d80000-0x000000e00000 : "user"
 [    0.712000] 0x000000e00000-0x000001000000 : "user2"
 ...
+```
+Install **_dd_** from busybox and **_scp_** from dropbear package (see **_Enable Telnet_** section to install **_busybox_** and **_Hardware and Firmware_** section to install **dropbear**), then
+```
+# tools included in busybox just need a symbolic link with their name
+ln -s /tmp/bin/busybox /tmp/bin/dd
+## copy mtd1 to a file and save for future use
+dd if=/dev/mtd1 of=/tmp/mtd1.img bs=512 count=128000 skip=0
+scp -v -S /tmp/bin/dbclient /tmp/mtd1.img pi@10.1.1.40:mtd1.img
+rm /tmp/mtd1.img
+```
+--> size 0x30000 = 196608 bytes. The command above tries to copy more data, so the whole mtd1 partition is copied. See **_cat /proc/mtd_** from above for details. 
 
-install dd from busybox and scp from dropbear package, then
-
-dd if=/dev/mtd1 of=/tmp/mtd1.cp bs=512 count=128000 skip=0
-scp -v -S /tmp/bin/dbclient /tmp/mtd1.cp pi@10.1.1.40:mtd1.cp
-rm /tmp/mtd1.cp
-
---> size 0x30000 = 196608 bytes. The command above tries to copy more data, so the whole mtd1 partition is copied.
-
-mtd1: 00030000 00010000 "Bootloader" - no environment variables
-mtd2: 00010000 00010000 "Config" - from 0x2000 to 0x6000
-mtd3: 00010000 00010000 "Factory"
-mtd4: 00200000 00010000 "bkKernel"
-mtd5: 001df508 00010000 "Kernel"
-mtd6: 00950af8 00010000 "RootFS"
-mtd7: 00b30000 00010000 "Kernel_RootFS"
-mtd8: 00080000 00010000 "user"
-mtd9: 00200000 00010000 "user2"
-
-mkdir /var/lock
-
-create file /etc/fw_env.config 
-with
+Create the file **_/etc/fw_env.config_** with the following content, e.g. with vi: 
+```
+cat <<\EOF > /etc/fw_env.config 
 # MTD device name       Device offset   Env. size       Flash sector size
 /dev/mtd2 0x02000 0x4000 0x4000
-
-before setting the correct values:
-/tmp/fw_printenv
+EOF
+mkdir /var/lock
+```
+Before setting the correct values for the size the following error is shown:
+```
+fw_printenv
 Warning: Bad CRC, using default environment
 bootcmd=bootp; setenv bootargs root=/dev/nfs nfsroot=${serverip}:${rootpath} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}::off; bootm
 bootdelay=5
 baudrate=115200
-
-with settings from above:
-# fw_printenv
+```
+With the correct settings from above you get a list with all environment variables. These values are stored in NVRAM, so they will survive a reboot:
+```
+fw_printenv
 WebInit=1
 HostName=wiimu
 OperationMode=3
@@ -369,26 +377,9 @@ ApCliAuthMode=WPA2PSK
 ApCliEncrypType=AES
 ApCliChannel=6
 
-# show contents of NVRAM
+# a similar output will provide
 ralink_init show 2860
-
---> similar output
-
-code snippet from a script:
-srv=`nvram_get 2860 NTPServerIP`
-sync=`nvram_get 2860 NTPSync`
-tz=`nvram_get 2860 TZ`
-nvram_set 2860 TZ 
+```
 
 
-nvram_set 2860 RadioOn 0
-nvram_set 2860 ApCliEnable 0
-
---> blinking LED, but apcli0 and ra0 still enabled after reboot
-
-nvram_set 2860 TxPower 0 or 1
-
---> no effect
-
- The environment is usually at the end of the uboot partition.
 
