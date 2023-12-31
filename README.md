@@ -6,10 +6,23 @@ A few years ago I bought an Arylic Up2Stream Amp audio device to play and stream
 
 Another feature that I really miss is "WiFi disable". There is a function to hide the SSID, but there is no way to disable WiFi completely. For security reasons, but also to avoid additional devices sending on the 2,4GHz WiFi band I like to have such a feature. That was the starting point to dig deeper into these devices. It turned out that these devices have a Linux CLI with a SoC similar to older Internet routers. I tried to document and share my findings with others.
 
+## Other Researchers
+I'd like to thank others that have done resarches and that I have used as a starting point:
+
+Inofficial Linkplay API documentation from Anders Fluur:
+https://github.com/AndersFluur/LinkPlayApi
+
+Official API documentation from Arylic:
+https://developer.arylic.com/httpapi/#http-api
+
+Reverse Engineering by Crymeiriver:
+https://github.com/Crymeiriver/LS150/blob/master/README.md
+
 ## Enable telnetd
 To get started exploring these devices, a security vulnerability had to be exploited to install a telnetd.
 
-## Hardware Information
+## Hardware and Firmware
+More information about the hardware
 
 ## 
 
