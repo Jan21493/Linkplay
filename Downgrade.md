@@ -144,12 +144,11 @@ Next you download the specific **_product.xml_** file. The following URL is for 
 > **Important:**
 > I do not take responsibilities for results or consequences. You might damage your device! Do not try to downgrade your device if you are unsure!
 
-The following URL is for the RP0011_WB60_S product ID, version 4.2.8020, release date 0200220
+The following URL is for product ID RP0011_WB60_S:
 ```
 curl -O http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/product.xml
 ```
-
-Here is a copy for reference:
+Here is a copy from the file with version 4.2.8020, release date 0200220 for reference:
 ```
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <product>
