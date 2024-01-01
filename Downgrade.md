@@ -8,7 +8,7 @@ Before we are able to downgrade the software, it is important to understand how 
 
 The URL to the upgrade server can be retrieved via API:
 ```
-curl http://10.1.1.52/httpapi.asp?command=GetUpdateServer
+curl 'http://10.1.1.52/httpapi.asp?command=GetUpdateServer'
 # my device responds with: http://silenceota.linkplay.com/wifi_audio_image
 ```
 
@@ -95,20 +95,27 @@ The other images, e.g. uBoot loader (was already installed), user and user2 imag
 > **Note:**
 > If an upgrade is available, it may be installed automatically without any notice! In the 4Stream app you might see that a new version is highlighted with "new" and you might get a popup with a notification. I have not found out, when an update is installed automatically. 
 
-## Firmware Downgrade
+## Firmware Downgrade v4.2
 To be able to downgrade the firmware you need to modify DNS names, e.g. you may install dnsmasq on your local network and point to that DNS server from your DHCP server. To redirect the firmware up-/downgrade process to your own webserver, you can create a simple file in the /etc/dnsmasq.d directory with the following content (10.1.1.22 is the IP address of my webserver located on my MacMini)
- The following records are required on the DNS server:
+
+The downgrade needs to be adjusted for newer versions, e.g. v4.6.415145, release date 20220427", see section Firmware Downgrade from v4.6 below.
+
+The following records are required on the DNS server:
 ```
 cat /etc/dnsmasq.d/linkplay.conf
 address=/silenceota.linkplay.com/10.1.1.22
 address=/ota.rakoit.com/10.1.1.22
+```
+Restart dnsmasq after any changes:
+```
+/etc/init.d/dnsmasq restart
 ```
 You may modify the configuration file on your webserver to use different folders for different FQDNs. Be sure to verify any URLs from a web browser or curl. On your PC you may manually point to a public DNS server to be able to download XML files and images from the Internet.
 
 > **Note:**
 > The modification of the two FQDNs will prevent any further updates!
 
-A firmware downgrade has been tested from v4.6 to v4.2.8026 (release date 20200220). Here it is documented from v4.2.8826 to v4.2.8026. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
+Here it is documented from v4.2.8826 to v4.2.8026. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
 
 ```
 curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
@@ -155,11 +162,11 @@ Here is a copy from the file with version 4.2.8020, release date 0200220 for ref
   <major-version>20200220</major-version>
   <sign>27178fb574eafbdab8e1493a1569dd36</sign>
   <md5-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/md5.txt</md5-url>
-  <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver_20200220</ver-url>
+  <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver</ver-url>
   <layout-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/layout</layout-url>
   <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/uboot_v632.img</image-uboot>
   <image-backup>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/backup_new_v1141.img</image-backup>
-  <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage_20200220</image-kernel>
+  <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage</image-kernel>
   <image-user>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user.jffs2</image-user>
   <image-user2>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user2.jffs2</image-user2>
 
@@ -180,11 +187,11 @@ Modify the <major-version> in the **_product.xml_** file to be one day ahead of 
  <major-version>20201027</major-version>
  <sign>27178fb574eafbdab8e1493a1569dd36</sign>
  <md5-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/md5.txt</md5-url>
- <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver_20200220</ver-url>
+ <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver</ver-url>
  <layout-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/layout</layout-url>
  <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/uboot_v632.img</image-uboot>
  <image-backup>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/backup_new_v1141.img</image-backup>
- <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage_20200220</image-kernel>
+ <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage</image-kernel>
  <image-user>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user.jffs2</image-user>
  <image-user2>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user2.jffs2</image-user2>
  <project>
@@ -197,11 +204,11 @@ Modify the <major-version> in the **_product.xml_** file to be one day ahead of 
 ```
 Download and install all files from the list above on your web server. 
 
-Modifiy the version number in the **_MVver_20200220_** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
+Modifiy the version number in the **_MVver_** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
 
-Modify the release date in the **_MVver_20200220_** file (6th line) with the same date used in the previous step.
+Modify the release date in the **_MVver_** file (6th line) with the same date used in the previous step.
 
-Here is an example of the modified  **_MVver_20200220_** file:
+Here is an example of the modified  **_MVver_** file:
 ```
 WiiMu.4.2.8827
 WiiMu
@@ -221,6 +228,148 @@ Modify the version (ver, 4th column) in the **_layout_** file (4th line) with th
 
 Trigger an update with the following commands and verify the progress with Wireshark running on your web server. You may use "http" as a filter to see the downgrade process:
 ```
-curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStartCheck
-curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStatus
+curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStartCheck'
+curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStatus'
+```
+
+## Firmware Downgrade v4.6
+In newer versions it does not work to modifiy your DNS server to add a spoofed (local) IP address like 10.1.1.22 for silenceota.linkplay.com anymore. I'm not sure if that's due to the fact that this is a local IP address or spoofing is not allowed for silenceota.linkplay.com anymore. The following procedure has been tested with v4.6.415145, release date 2022/04/27.
+
+To be able to downgrade the firmware and prevent an automatic upgrade afterwards you need to modify DNS names, e.g. you may install dnsmasq on your local network and point to that DNS server from your DHCP server. To redirect the firmware up-/downgrade process to your own webserver, you can create a simple file in the /etc/dnsmasq.d directory with the following content (10.1.1.22 is the IP address of my webserver located on my MacMini)
+
+I've used the FQDN **_ota.tatooine.org_** (that I do not have registered) to be independent of a specific IP address. The downgrade has been tested with plain IP addresses as well (in all config files and SetUpdateServer command), so you may not need to run your own dnsmasq server, but you need to block Internet requests from the Linkplay devices to prevent automatic upgrades afterwards.
+
+The following records were created on the DNS server:
+```
+cat /etc/dnsmasq.d/linkplay.conf
+address=/silenceota.linkplay.com/10.1.1.22
+address=/ota.rakoit.com/10.1.1.22
+address=/api.linkplay.com/10.1.1.22
+address=/ota.tatooine.org/10.1.1.22
+```
+Restart dnsmasq after any changes:
+```
+/etc/init.d/dnsmasq restart
+```
+You may modify the configuration file on your webserver to use different folders for different FQDNs. Be sure to verify any URLs from a web browser or curl. On your PC you may manually point to a public DNS server to be able to download XML files and images from the Internet.
+
+> **Note:**
+> Beside of your own DNS server (typically set by DHCP), the Linkplay devices also send DNS requests to 8.8.8.8 and 8.8.4.4 (the two Google DNS servers). The device also sends requests to firehose.eu-central-1.amazonaws.com, api.linkplay.com
+The modification of the two FQDNs will prevent any further updates!
+
+Here it is documented from v4.2.8826 to v4.2.8026. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
+
+```
+curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
+{
+  "language": "en_us",
+  "ssid": "SoundSystem_305D",
+  ...
+  "firmware": "4.2.8826",
+  "build": "release",
+  "project": "RP0011_WB60_S",
+  "priv_prj": "RP0011_WB60_S",
+  "project_build_name": "a31rakoit",
+  "Release": "20201026",
+```
+
+At first you have to download the following XML files, install them in the appropriate directory on your webserver (you may keep the path and create the directories as required). 
+
+> **Important:**
+> There is no link to older version available. The **_products.xml_** file only contains URLs for the latest version, so you need to know (or guess) the URL for the specific **_product.xml_** file. The following URL is working for the Up2Stream Amp v2 and partially also for the Up2Stream Pro v3 (without MCU). I've added the URL for the **_products.xml_** file to the Wayback archive (https://web.archive.org) on Dec 31th 2023, so it does not work for older versions.
+
+The **_products.xml_** file that has been archived on 20231231 can be retrieved here:
+```
+curl https://web.archive.org/web/20231231141235/http://silenceota.linkplay.com/wifi_audio_image/products.xml
+```
+
+At first you can download the actual **_products.xml_** file, remove everything except your products, adjust the URLs (optionally) and install it on your web server:
+```
+curl -O http://silenceota.linkplay.com/wifi_audio_image/products.xml
+```
+
+Next you download the specific **_product.xml_** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the **_product.xml_** files and images are still available for download - you just need to know (or guess) the URLs.
+
+> **Important:**
+> I do not take responsibilities for results or consequences. You might damage your device! Do not try to downgrade your device if you are unsure!
+
+The following URL is for product ID RP0011_WB60_S:
+```
+curl -O http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/product.xml
+```
+Here is a copy from the file with version 4.2.8020, release date 0200220 for reference:
+```
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<product>
+  <major-version>20200220</major-version>
+  <sign>27178fb574eafbdab8e1493a1569dd36</sign>
+  <md5-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/md5.txt</md5-url>
+  <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver</ver-url>
+  <layout-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/layout</layout-url>
+  <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/uboot_v632.img</image-uboot>
+  <image-backup>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/backup_new_v1141.img</image-backup>
+  <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage</image-kernel>
+  <image-user>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user.jffs2</image-user>
+  <image-user2>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user2.jffs2</image-user2>
+
+
+<project>
+<name>RP0011_WB60_S</name>
+<mcu-ver>0022</mcu-ver>
+<mcu-size>670246</mcu-size>
+<mcu-image>http://silenceota.linkplay.com/wifi_audio_image_mcu/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
+</project>
+</product>
+```
+
+Modify the <major-version> in the **_product.xml_** file to be one day ahead of your current release date, e.g. 20201027 if your current release date is 20201026. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device!
+```
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<product>
+ <major-version>20201027</major-version>
+ <sign>27178fb574eafbdab8e1493a1569dd36</sign>
+ <md5-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/md5.txt</md5-url>
+ <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver</ver-url>
+ <layout-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/layout</layout-url>
+ <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/uboot_v632.img</image-uboot>
+ <image-backup>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/backup_new_v1141.img</image-backup>
+ <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage</image-kernel>
+ <image-user>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user.jffs2</image-user>
+ <image-user2>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user2.jffs2</image-user2>
+ <project>
+  <name>RP0011_WB60_S</name>
+  <mcu-ver>0022</mcu-ver>
+  <mcu-size>670246</mcu-size>
+  <mcu-image>http://silenceota.linkplay.com/wifi_audio_image_mcu/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
+ </project>
+</product>
+```
+Download and install all files from the list above on your web server. 
+
+Modifiy the version number in the **_MVver_** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
+
+Modify the release date in the **_MVver_** file (6th line) with the same date used in the previous step.
+
+Here is an example of the modified  **_MVver_** file:
+```
+WiiMu.4.2.8827
+WiiMu
+WiiMu-A31
+a31rakoit
+release
+20201027
+customuuid=FF31F09E
+```
+Modify the version (ver, 4th column) in the **_layout_** file (4th line) with the same date used in the previous step (here 8827):
+```
+#offset :max_size:min_size:ver:flag:fstype:name:img_size
+00e00000:00200000:00000040:00000000:2:jffs2:user2:00200000
+00d80000:00080000:00000000:00000000:2:jffs2:user:1
+00250000:00b30000:00000040:00008827:0:null:kernel:8533256
+```
+
+Trigger an update with the following commands and verify the progress with Wireshark running on your web server. You may use "http" as a filter to see the downgrade process:
+```
+curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStartCheck'
+curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStatus'
 ```
