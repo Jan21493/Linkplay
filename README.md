@@ -29,3 +29,6 @@ Information about the boot process, file systems including environment (NVRAM). 
 
 ## Downgrade Firmware
 The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020). That version still has some vulnerabilites to be able to get onto the CLI with telnet by pushing a single command to these devices. Although it is good when the vendor is providing upgrades with additional feature and security fixes, I'd still like to be able to "hack" into the CLI. Therefore I had to downgrade the firmware. [Downgrade Firmware](/Downgrade.md)
+
+## Install Persistant Hook
+When the device reboots, any changes in ramfs are lost, however there is a way to install a script or command so that it survives a reboot. [Install Persistant Hook](/persistant-hook.md)
