@@ -45,7 +45,7 @@ The following table lists some of the IDs
 curl -O http://ota.rakoit.com/release/RP0011_WB60/product.xml
 ```
 > **Note:**
-> In previous versions the **_product.xml_** was also retrieved from silenceota.linkplay.com/wifi_audio_image and stored in the same directory as the images below.
+> In previous versions the ***product.xml*** was also retrieved from silenceota.linkplay.com/wifi_audio_image and stored in the same directory as the images below.
 
 The example was downloaded in Oct 2020:
 ```
@@ -98,9 +98,10 @@ The other images, e.g. uBoot loader (was already installed), user and user2 imag
 ## Firmware Downgrade v4.2
 To be able to downgrade the firmware you need to modify DNS names, e.g. you may install dnsmasq on your local network and point to that DNS server from your DHCP server. To redirect the firmware up-/downgrade process to your own webserver, you can create a simple file in the /etc/dnsmasq.d directory with the following content (10.1.1.22 is the IP address of my webserver located on my MacMini)
 
-The downgrade needs to be adjusted for newer versions, e.g. v4.6.415145, release date 20220427", see section Firmware Downgrade from v4.6 below.
+The downgrade needs to be adjusted for newer versions, e.g. v4.6.415145, release date 20220427". If you have a device with that version, continue to read section 
+[Firmware Downgrade from v4.6](Downgrade.md#firmware-downgrade-v46)below.
 
-The following records are required on the DNS server:
+The following records were added on the DNS server:
 ```
 cat /etc/dnsmasq.d/linkplay.conf
 address=/silenceota.linkplay.com/10.1.1.22
@@ -134,19 +135,19 @@ curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
 At first you have to download the following XML files, install them in the appropriate directory on your webserver (you may keep the path and create the directories as required). 
 
 > **Important:**
-> There is no link to older version available. The **_products.xml_** file only contains URLs for the latest version, so you need to know (or guess) the URL for the specific **_product.xml_** file. The following URL is working for the Up2Stream Amp v2 and partially also for the Up2Stream Pro v3 (without MCU). I've added the URL for the **_products.xml_** file to the Wayback archive (https://web.archive.org) on Dec 31th 2023, so it does not work for older versions.
+> There is no link to older version available. The ***products.xml*** file only contains URLs for the latest version, so you need to know (or guess) the URL for the specific ***product.xml*** file. The following URL is working for the Up2Stream Amp v2 and partially also for the Up2Stream Pro v3 (without MCU). I've added the URL for the ***products.xml*** file to the Wayback archive (https://web.archive.org) on Dec 31th 2023, so it does not work for older versions.
 
-The **_products.xml_** file that has been archived on 20231231 can be retrieved here:
+The ***products.xml*** file that has been archived on 20231231 can be retrieved here:
 ```
 curl https://web.archive.org/web/20231231141235/http://silenceota.linkplay.com/wifi_audio_image/products.xml
 ```
 
-At first you can download the actual **_products.xml_** file, remove everything except your products, adjust the URLs (optionally) and install it on your web server:
+At first you can download the actual ***products.xml*** file, remove everything except your products, adjust the URLs (optionally) and install it on your web server:
 ```
 curl -O http://silenceota.linkplay.com/wifi_audio_image/products.xml
 ```
 
-Next you download the specific **_product.xml_** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the **_product.xml_** files and images are still available for download - you just need to know (or guess) the URLs.
+Next you download the specific ***product.xml*** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the ***product.xml*** files and images are still available for download - you just need to know (or guess) the URLs.
 
 > **Important:**
 > I do not take responsibilities for results or consequences. You might damage your device! Do not try to downgrade your device if you are unsure!
@@ -180,7 +181,7 @@ Here is a copy from the file with version 4.2.8020, release date 0200220 for ref
 </product>
 ```
 
-Modify the <major-version> in the **_product.xml_** file to be one day ahead of your current release date, e.g. 20201027 if your current release date is 20201026. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device!
+Modify the <major-version> in the ***product.xml*** file to be one day ahead of your current release date, e.g. 20201027 if your current release date is 20201026. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device!
 ```
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <product>
@@ -204,11 +205,11 @@ Modify the <major-version> in the **_product.xml_** file to be one day ahead of 
 ```
 Download and install all files from the list above on your web server. 
 
-Modifiy the version number in the **_MVver_** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
+Modifiy the version number in the ***MVver*** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
 
-Modify the release date in the **_MVver_** file (6th line) with the same date used in the previous step.
+Modify the release date in the ***MVver*** file (6th line) with the same date used in the previous step.
 
-Here is an example of the modified  **_MVver_** file:
+Here is an example of the modified  ***MVver*** file:
 ```
 WiiMu.4.2.8827
 WiiMu
@@ -218,7 +219,7 @@ release
 20201027
 customuuid=FF31F09E
 ```
-Modify the version (ver, 4th column) in the **_layout_** file (4th line) with the same date used in the previous step (here 8827):
+Modify the version (ver, 4th column) in the ***layout*** file (4th line) with the same date used in the previous step (here 8827):
 ```
 #offset :max_size:min_size:ver:flag:fstype:name:img_size
 00e00000:00200000:00000040:00000000:2:jffs2:user2:00200000
@@ -233,11 +234,11 @@ curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStatus'
 ```
 
 ## Firmware Downgrade v4.6
-In newer versions it does not work to modifiy your DNS server to add a spoofed (local) IP address like 10.1.1.22 for silenceota.linkplay.com anymore. I'm not sure if that's due to the fact that this is a local IP address or spoofing is not allowed for silenceota.linkplay.com anymore. The following procedure has been tested with v4.6.415145, release date 2022/04/27.
+In newer versions it does not work to modifiy your DNS server to add a spoofed (local) IP address like 10.1.1.22 for silenceota.linkplay.com anymore. With Wireshark I was not able to see any http requests to the ***products.xml*** file from the Linkplay device. I'm not sure if that's due to the fact that this is a local IP address or spoofing is not allowed for silenceota.linkplay.com anymore. The following procedure has been tested with v4.6.415145, release date 2022/04/27.
 
-To be able to downgrade the firmware and prevent an automatic upgrade afterwards you need to modify DNS names, e.g. you may install dnsmasq on your local network and point to that DNS server from your DHCP server. To redirect the firmware up-/downgrade process to your own webserver, you can create a simple file in the /etc/dnsmasq.d directory with the following content (10.1.1.22 is the IP address of my webserver located on my MacMini)
+To be able to prevent an automatic upgrade afterwards you need to modify DNS names or block specific DNS requests. You may either install dnsmasq on your local network and point to that DNS server from your DHCP server or block DNS requests from the Linkplay device to the Internet. To install dnsmasq follow instructions from the Internet, create a simple file in the /etc/dnsmasq.d directory with the following content (10.1.1.22 is the IP address of my webserver located on my MacMini)
 
-I've used the FQDN **_ota.tatooine.org_** (that I do not have registered) to be independent of a specific IP address. The downgrade has been tested with plain IP addresses as well (in all config files and SetUpdateServer command), so you may not need to run your own dnsmasq server, but you need to block Internet requests from the Linkplay devices to prevent automatic upgrades afterwards.
+The downgrade process seem only to work with plain IP addresses instead of DNS names in all config files and the SetUpdateServer command, so you may not need to run your own dnsmasq server, but you need to block DNS requests from the Linkplay devices to the Internet to prevent automatic upgrades afterwards.
 
 The following records were created on the DNS server:
 ```
@@ -245,7 +246,6 @@ cat /etc/dnsmasq.d/linkplay.conf
 address=/silenceota.linkplay.com/10.1.1.22
 address=/ota.rakoit.com/10.1.1.22
 address=/api.linkplay.com/10.1.1.22
-address=/ota.tatooine.org/10.1.1.22
 ```
 Restart dnsmasq after any changes:
 ```
@@ -254,41 +254,65 @@ Restart dnsmasq after any changes:
 You may modify the configuration file on your webserver to use different folders for different FQDNs. Be sure to verify any URLs from a web browser or curl. On your PC you may manually point to a public DNS server to be able to download XML files and images from the Internet.
 
 > **Note:**
-> Beside of your own DNS server (typically set by DHCP), the Linkplay devices also send DNS requests to 8.8.8.8 and 8.8.4.4 (the two Google DNS servers). The device also sends requests to firehose.eu-central-1.amazonaws.com, api.linkplay.com
-The modification of the two FQDNs will prevent any further updates!
+> Beside of your own DNS server (typically set by DHCP), the Linkplay devices also send DNS requests to ***8.8.8.8*** and ***8.8.4.4*** (the two Google DNS servers). The device also sends DNS requests with ***firehose.eu-central-1.amazonaws.com***, ***api.linkplay.com*** as names and asks for their IP addresses. You may need to block these requests on your Internet router or point to your local web server to prevent automatic updates later on. I've blocked any DNS requests on my Internet router (Fritz!box) by using a blocking list and adding DNS service to this list. Older version (v.4.2) send DNS requests with s000.linkplay.com and avs-alexa-na.amazon.com as a name. The DNS requests may be related to the music services that are available or configured on the device.
 
-Here it is documented from v4.2.8826 to v4.2.8026. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
+To get information about the product ID (project), the current version and release date you can use the ***"getStatusEx"*** command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
 
 ```
-curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
+curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
 {
-  "language": "en_us",
-  "ssid": "SoundSystem_305D",
+  "uuid": "FF31F09E2BE2384A4E6CF9BB",
+  "DeviceName": "Sauna",
   ...
-  "firmware": "4.2.8826",
+  "firmware": "4.6.415145",
+  "hardware": "A31",
   "build": "release",
   "project": "RP0011_WB60_S",
   "priv_prj": "RP0011_WB60_S",
   "project_build_name": "a31rakoit",
-  "Release": "20201026",
+  "Release": "20220427",
 ```
 
 At first you have to download the following XML files, install them in the appropriate directory on your webserver (you may keep the path and create the directories as required). 
 
 > **Important:**
-> There is no link to older version available. The **_products.xml_** file only contains URLs for the latest version, so you need to know (or guess) the URL for the specific **_product.xml_** file. The following URL is working for the Up2Stream Amp v2 and partially also for the Up2Stream Pro v3 (without MCU). I've added the URL for the **_products.xml_** file to the Wayback archive (https://web.archive.org) on Dec 31th 2023, so it does not work for older versions.
+> There is no link to older version available. The ***products.xml*** file only contains URLs for the latest version, so you need to know (or guess) the URL for the specific ***product.xml*** file. The following URL is working for the Up2Stream Amp v2 and partially also for the Up2Stream Pro v3 (without MCU). I've added the URL for the ***products.xml*** file to the Wayback archive (https://web.archive.org) on Dec 31th 2023, so it does not work for older versions.
 
-The **_products.xml_** file that has been archived on 20231231 can be retrieved here:
+The ***products.xml*** file that has been archived on 20231231 can be retrieved here:
 ```
 curl https://web.archive.org/web/20231231141235/http://silenceota.linkplay.com/wifi_audio_image/products.xml
 ```
 
-At first you can download the actual **_products.xml_** file, remove everything except your products, adjust the URLs (optionally) and install it on your web server:
+At first you can download the actual ***products.xml*** file, remove everything except your products, adjust the URLs (optionally) and install it on your web server:
 ```
 curl -O http://silenceota.linkplay.com/wifi_audio_image/products.xml
 ```
 
-Next you download the specific **_product.xml_** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the **_product.xml_** files and images are still available for download - you just need to know (or guess) the URLs.
+I've modified the FQDNs to point directly to the IP address of my web server and have only these three products in the list:
+```
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<productList>
+  <product>
+    <productid>RP0011_WB60</productid>
+    <hardwareversion>WiiMu-A31</hardwareversion>
+    <UUID>FF31F09E</UUID>
+    <major-url>http://10.1.1.22/a31/RP0011_WB60/20200220/product.xml</major-url>
+  </product>
+  <product>
+    <productid>RP0011_WB60_S</productid>
+    <hardwareversion>WiiMu-A31</hardwareversion>
+    <UUID>FF31F09E</UUID>
+    <major-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/product.xml</major-url>
+  </product>
+  <product>
+    <productid>UP2STREAM_PRO_V3</productid>
+    <hardwareversion>WiiMu-A31</hardwareversion>
+    <UUID>FF31F09E</UUID>
+    <major-url>http://10.1.1.22/a31/UP2STREAM_PRO_V3/20200220/product.xml</major-url>
+  </product>
+</productList>```
+
+Next you download the specific ***product.xml*** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, RP0011_WB60_S, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the ***product.xml*** files and images are still available for download - you just need to know (or guess) the URLs.
 
 > **Important:**
 > I do not take responsibilities for results or consequences. You might damage your device! Do not try to downgrade your device if you are unsure!
@@ -322,54 +346,67 @@ Here is a copy from the file with version 4.2.8020, release date 0200220 for ref
 </product>
 ```
 
-Modify the <major-version> in the **_product.xml_** file to be one day ahead of your current release date, e.g. 20201027 if your current release date is 20201026. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device!
+Modify the <major-version> in the ***product.xml*** file to be one day ahead of your current release date, e.g. 20220428 if your current release date is 20220427. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device! As before I've also modified the FQDNs to point to my own domain and the subdirectory names to be more descriptive.
 ```
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <product>
- <major-version>20201027</major-version>
- <sign>27178fb574eafbdab8e1493a1569dd36</sign>
- <md5-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/md5.txt</md5-url>
- <ver-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/MVver</ver-url>
- <layout-url>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/layout</layout-url>
- <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/uboot_v632.img</image-uboot>
- <image-backup>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/backup_new_v1141.img</image-backup>
- <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/a31rakoit_new_uImage</image-kernel>
- <image-user>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user.jffs2</image-user>
- <image-user2>http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvPiYD8tJiqe/20200220/user2.jffs2</image-user2>
- <project>
-  <name>RP0011_WB60_S</name>
-  <mcu-ver>0022</mcu-ver>
-  <mcu-size>670246</mcu-size>
-  <mcu-image>http://silenceota.linkplay.com/wifi_audio_image_mcu/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
- </project>
+  <major-version>20220428</major-version>
+  <sign>27178fb574eafbdab8e1493a1569dd36</sign>
+  <md5-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/md5.txt</md5-url>
+  <ver-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/MVver</ver-url>
+  <layout-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/layout</layout-url>
+  <image-uboot>http://10.1.1.22/a31/RP0011_WB60_S/uboot_v632.img</image-uboot>
+  <image-backup>http://10.1.1.22/a31/RP0011_WB60_S/backup_new_v1141.img</image-backup>
+  <image-kernel>http://10.1.1.22/a31/RP0011_WB60_S/20200220/a31rakoit_new_uImage</image-kernel>
+  <image-user>http://10.1.1.22/a31/RP0011_WB60_S/20200220/user.jffs2</image-user>
+  <image-user2>http://10.1.1.22/a31/RP0011_WB60_S/20200220/user2.jffs2</image-user2>
+  <project>
+    <name>RP0011_WB60_S</name>
+    <mcu-ver>0022</mcu-ver>
+    <mcu-size>670202</mcu-size>
+    <mcu-image>http://10.1.1.22/a31/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
+  </project>
 </product>
 ```
-Download and install all files from the list above on your web server. 
+Download and install all files from the list above (from the original server!) on your web server in the appropriate directories.
 
-Modifiy the version number in the **_MVver_** file (first line) to be higher than your current version number, e.g. WiiMu.4.2.8027 if your current version is 4.2.8826. 
+Modifiy the version number in the ***MVver*** file (first line) to be higher than your current version number, e.g. WiiMu.4.6.415146 if your current version is 4.6.415145. 
 
-Modify the release date in the **_MVver_** file (6th line) with the same date used in the previous step.
+Modify the release date in the ***MVver*** file (6th line) with the same date used in the previous step.
 
-Here is an example of the modified  **_MVver_** file:
+Here is an example of the modified  ***MVver*** file:
 ```
-WiiMu.4.2.8827
+WiiMu.4.6.415146
 WiiMu
 WiiMu-A31
 a31rakoit
 release
-20201027
+20220428
 customuuid=FF31F09E
 ```
-Modify the version (ver, 4th column) in the **_layout_** file (4th line) with the same date used in the previous step (here 8827):
+Modify the version (ver, 4th column) in the ***layout*** file (4th line) with the same date used in the previous step (here 8827):
 ```
 #offset :max_size:min_size:ver:flag:fstype:name:img_size
 00e00000:00200000:00000040:00000000:2:jffs2:user2:00200000
 00d80000:00080000:00000000:00000000:2:jffs2:user:1
-00250000:00b30000:00000040:00008827:0:null:kernel:8533256
+00250000:00b30000:00000040:00415146:0:null:kernel:8533256
 ```
 
-Trigger an update with the following commands and verify the progress with Wireshark running on your web server. You may use "http" as a filter to see the downgrade process:
+Trigger an update with the following commands and verify the progress with Wireshark running on your web server. You may use "http || dns" as a filter to see the downgrade process:
 ```
-curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStartCheck'
-curl -s 'http://10.1.1.52/httpapi.asp?command=getMvRemoteUpdateStatus'
+curl -s 'http://10.1.1.58/httpapi.asp?command=SetUpdateServer:http://10.1.1.22/a31'
+curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStartCheck'
+curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStatus'
+```
+To verify that the downgrade was sucessfull, you may request the extended status from the device.
+```
+curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
+{
+  ...
+  "firmware": "4.2.8020",
+  "build": "release",
+  "project": "RP0011_WB60_S",
+  "priv_prj": "RP0011_WB60_S",
+  "Release": "20200220",
+  "branch": "stable/wiimu-4.2",
 ```

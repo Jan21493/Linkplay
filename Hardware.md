@@ -23,7 +23,8 @@ https://openwrt.org/docs/techref/hardware/soc/soc.mediatek
 https://openwrt.org/docs/techref/instructionset/mipsel_24kc
 https://www.linkplay.com/modules-wi-fi-2
 
-There is an OpenWRT archive where you can get precompiled binaries for almost all utilities you may need:
+## Firmware
+Of course it is possible to compile Linux sources for a specific target system, but it may be much easier to get precompiled binaries. There is an OpenWRT archive where you can get these binaries for almost all utilities you may need:
 https://archive.openwrt.org/chaos_calmer/15.05/ramips/mt7628/packages/base/
 and
 https://archive.openwrt.org/chaos_calmer/15.05.1/ramips/mt7628/
@@ -41,7 +42,7 @@ tar zxpvf ../dropbear_2015.67-1_ramips_24kec.ipk
 tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
 # copy dropbear binary to a subdirectory on your webserver
-cp usr/sbin/dropbear /Library/WebServer/Documents/a31/
+cp usr/sbin/dropbear /Library/WebServer/Documents/a31/bin
 # you may open finder to search for additional information in the package
 open .
 ```
@@ -49,7 +50,7 @@ In the next step you can you can download and install dropbear on the Up2Stream 
 ``` 
 cd /tmp
 mkdir /tmp/bin
-wget -O /tmp/bin/dropbear -T 5 'http://10.1.1.22/a31/dropbear'
+wget -O /tmp/bin/dropbear -T 5 'http://10.1.1.22/a31/bin/dropbear'
 chmod 777 /tmp/bin/dropbear
 # create links for additional commands
 ln -s /tmp/bin/dropbear /tmp/bin/dropbearkey
@@ -81,13 +82,13 @@ tar zxpvf ../openssh-sftp-server_7.1p2-1_ramips_24kec.ipk
 tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
 # copy sftp server binary to a subdirectory on your webserver
-cp usr/lib/sftp-server /Library/WebServer/Documents/a31/
+cp usr/lib/sftp-server /Library/WebServer/Documents/a31/bin
 # you may open finder to search for additional information in the package
 open .
 ```
 and on the Up2Stream device:
 ```
-wget -O /tmp/bin/sftp-server -T 5 'http://10.1.1.22/a31/sftp-server'
+wget -O /tmp/bin/sftp-server -T 5 'http://10.1.1.22/a31/bin/sftp-server'
 chmod 777 /tmp/bin/sftp-server
 ```
 
@@ -114,7 +115,7 @@ tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
 
 # on Up2Stream device:
-wget -O /tmp/readelf -T 5 'http://10.1.1.22/a31/readelf';/bin/chmod 777 /tmp/readelf
+wget -O /tmp/bin/readelf -T 5 'http://10.1.1.22/a31/bin/readelf';/bin/chmod 777 /tmp/bin/readelf
 
 # download libbfd_2.24-3_ramips_24kec.ipk
 mkdir libbfd_2.24-3_ramips_24kec
@@ -124,7 +125,7 @@ tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
 
 # on Up2Stream device:
-wget -O /tmp/libbfd-2.24.so -T 5 'http://10.1.1.22/a31/libbfd-2.24.so';/bin/chmod 777 /tmp/libbfd-2.24.so
+wget -O /tmp/bin/libbfd-2.24.so -T 5 'http://10.1.1.22/a31/bin/libbfd-2.24.so';/bin/chmod 777 /tmp/bin/libbfd-2.24.so
 
 # download file_5.25-1_ramips_24kec.ipk
 mkdir file_5.25-1_ramips_24kec
@@ -134,10 +135,10 @@ tar zxpvf control.tar.gz
 tar zxpvf data.tar.gz
 
 # on Up2Stream device:
-wget -O /tmp/file -T 5 'http://10.1.1.22/a31/file';/bin/chmod 777 /tmp/file
+wget -O /tmp/bin/file -T 5 'http://10.1.1.22/a31/bin/file';/bin/chmod 777 /tmp/bin/file
 
 # on Up2Stream device:
-wget -O /tmp/strings -T 5 'http://10.1.1.22/a31/strings';/bin/chmod 777 /tmp/strings
+wget -O /tmp/bin/strings -T 5 'http://10.1.1.22/a31/bin/strings';/bin/chmod 777 /tmp/bin/strings
 ```
 Here are some code snippets from a script on the device (can't remember any details). It looks that the commands for NTP are not working anymore, also the commands to switch power for the WiFi interface off:
 ```
