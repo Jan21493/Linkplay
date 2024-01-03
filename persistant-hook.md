@@ -85,18 +85,33 @@ echo "WiFi disabled!"
 ```
 For testing purpose, you may ***reboot*** and ***telnet*** to the device afterwards.
 
-Here's the file from the device where the script was NOT present:
+Here's the file from the device where the script was NOT present. There is a little "enhancement" included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
+
+A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just help (see shell script below). You may create symbolic links for these commands or start them by e.g. ***/tmp/bin/busybox telnet 10.1.1.52***.
 ```
 mkdir /vendor/user
 cat <<\EOF > /vendor/user/user.sh
 #!/bin/sh
+
+sleep 5
 # get telnetd from full version of busybox and start in background
+mkdir /tmp/bin
 wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/a31/bin/busybox -q
-chmod 777 /tmp/bin/busybox
-/tmp/bin/busybox telnetd -l/bin/ash >/tmp/web/busybox.out 2>/tmp/web/busybox.err &
+chmod 555 /tmp/bin/busybox
+ln -s /tmp/bin/busybox /tmp/bin/telnetd
+ln -s /tmp/bin/busybox /tmp/bin/ash
+/tmp/bin/telnetd telnetd -l/tmp/bin/ash &
+
+echo '#!/bin/sh' >/tmp/bin/help
+echo '/tmp/bin/busybox --help' >>/tmp/bin/help
+chmod 755 /tmp/bin/help
+
 # shut down WiFi
-ifconfig ra0 down
 ifconfig apcli0 down
+ifconfig ra0 down
+sleep 600
+ifconfig apcli0 down
+
 # Uncomment to disable sleep after 15 minutes
 #while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
 EOF
@@ -104,5 +119,7 @@ chmod 755 /vendor/user/user.sh
 cd /vendor/user
 ls -l
 ```
-So far, the device fetches the full version of busybook after each reboot. With ***df*** command you can verify the free space on each of the file systems.
+The shutdown of "apcli0" does not work within the script, however it works a bit later if executed manually.
+
+So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
 
