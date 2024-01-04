@@ -1,5 +1,7 @@
 # Install Persistant Hook
-When the device reboots, any changes in ramfs are lost, but the device is using flash with squashfs and jffs2 file systems. I have not discovered how to modfiy and upload an image to squashfs, but with jffs2 there is a way to install a hook.
+When the device reboots, any changes in ramfs are lost, but the device is using flash with squashfs and jffs2 file systems. I have not discovered how to modfiy and upload an image to squashfs, but with jffs2 there is a way to install a hook. That hook even survives an upgrade that is done afterwards (see end of this section)!
+
+To start, you have to enable telnet and that may require a downgrade in the first step. See [Downgrade Firmware](/Downgrade.md) and [Enable telnetd](/TELNETD.md).
 
 Below is an output of mount command and ***cat /proc/mtd*** output:
 ```
@@ -59,7 +61,7 @@ fi
 # ######### additional code to install telnetd and more #############
 # get telnetd from full version of busybox and start in background
 mkdir /tmp/bin
-wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/a31/bin/busybox -q
+wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
 chmod 555 /tmp/bin/busybox
 ln -s /tmp/bin/busybox /tmp/bin/telnetd
 sn=`ps | grep busybox | wc -l`
@@ -86,7 +88,7 @@ For testing purpose, you may ***reboot*** and ***telnet*** to the device afterwa
 
 Here's the file from the device where the script was NOT present. There is a little "enhancement" included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
 
-A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just help (see shell script below). You may create symbolic links for these commands or start them by e.g. ***/tmp/bin/busybox telnet 10.1.1.52***.
+A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just help (see shell script below). You may create symbolic links for these commands (recommended, see below for an example) or start them directly, e.g. ***/tmp/bin/busybox dmesg***.
 ```
 mkdir /vendor/user
 cat <<\EOF > /vendor/user/user.sh
@@ -95,7 +97,7 @@ cat <<\EOF > /vendor/user/user.sh
 sleep 5
 # get telnetd from full version of busybox and start in background
 mkdir /tmp/bin
-wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/a31/bin/busybox -q
+wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
 chmod 555 /tmp/bin/busybox
 ln -s /tmp/bin/busybox /tmp/bin/telnetd
 ln -s /tmp/bin/busybox /tmp/bin/ash
@@ -121,4 +123,35 @@ ls -l
 The shutdown of "apcli0" does not work within the script, however it works a bit later if executed manually.
 
 So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
+
+The good thing is, that this hook even suvives an upgrade that is done afterwards (tested with v4.6.415145, release date 2022/04/27.):
+```
+Mac-mini ~ % curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
+{
+  "uuid": "FF31F09EAC1C213319CC79B5",
+  "DeviceName": "Wohnzimmer",
+  "GroupName": "Wohnzimmer",
+  "ssid": "Wohnzimmer_4029",
+  "language": "en_us",
+  "firmware": "4.6.415145",
+  "hardware": "A31",
+  "build": "release",
+  "project": "UP2STREAM_PRO_V3",
+  "priv_prj": "UP2STREAM_PRO_V3",
+  "project_build_name": "a31rakoit",
+  "Release": "20220427",
+  "temp_uuid": "B4D39CBCE2C2015F",
+  ...
+}  
+Mac-mini ~ % telnet 10.1.1.52
+Trying 10.1.1.52...
+Connected to 10.1.1.52.
+Escape character is '^]'.
+
+
+BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)
+
+/system/workdir # exit
+Connection closed by foreign host.
+  ```
 

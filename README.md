@@ -32,3 +32,6 @@ The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020).
 
 ## Install Persistant Hook
 When the device reboots, any changes in ramfs are lost, however there is a way to install a script or command so that it survives a reboot. [Install Persistant Hook](/persistant-hook.md)
+
+## Download and Prepare Firmware on your own web server
+If you have some more Linkplay devices, the following information an 'list of curl commands' may help you to download and prepare the firmware on your own web server. [Download and prepare Firmware](/download-firmware.md)

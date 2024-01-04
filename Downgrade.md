@@ -8,8 +8,27 @@ Before we are able to downgrade the software, it is important to understand how 
 
 The URL to the upgrade server can be retrieved via API:
 ```
-curl 'http://10.1.1.52/httpapi.asp?command=GetUpdateServer'
+curl 'http://10.1.1.38/httpapi.asp?command=GetUpdateServer'
 # my device responds with: http://silenceota.linkplay.com/wifi_audio_image
+```
+You should also get the product ID (called 'project') that is used on your Linkplay device:
+```
+curl -s 'http://10.1.1.38/httpapi.asp?command=getStatusEx' | jq
+{
+  "uuid": "FF31F09E2B9A872D18C05AAD",
+  "DeviceName": "Mel Luca",
+  "GroupName": "Mel Luca",
+  "ssid": "Music",
+  "language": "en_us",
+  "firmware": "4.6.415145",
+  "hardware": "A31",
+  "build": "release",
+  "project": "RP0011_WB60",
+  "priv_prj": "RP0011_WB60",
+  "project_build_name": "a31rakoit",
+  "Release": "20220427",
+  ...
+}
 ```
 
 With Wireshark I have sniffed how the upgrade process is working and which files are required. At first the device gets a list of all (or at least many) Linkplay products 
@@ -36,8 +55,8 @@ http://ota.rakoit.com/release/RP0011_WB60/product.xml
 The following table lists some of the IDs
 | Product ID  | Description |
 | --------------- | ------------- |
-| RP0011_WB60 | Arylic WiFi and Bluetooth 5.0 HiFi Stereo Amplifier Board Up2Stream Amp 2.0 |
-| RP0011_WB60_S | Arylic A30 Pro and newer internal version of Up2Stream Amp v2.0 |
+| RP0011_WB60 | Arylic WiFi and Bluetooth 5.0 HiFi Stereo Amplifier Board Up2Stream Amp 2.0 (the pcb on my board shows version 1.1)|
+| RP0011_WB60_S | Arylic newer internal version of Up2Stream Amp v2.0 |
 | RP0016_S50PRO_S | Arylic S50 Pro  |
 | UP2STREAM_PRO_V3 | Arylic Up2Stream Pro v3 |
 
@@ -90,7 +109,7 @@ I'm not sure if the **<sign>** tag is used. I've modified the URLs (different FQ
 | http://silenceota.linkplay.com/wifi_audio_image/2ANRu7eyAEYtoo4NZPy9dL/20201026/layout | Layout of file system in flash |
 | http://silenceota.linkplay.com/wifi_audio_image/2ANRu7eyAEYtoo4NZPy9dL/20201026/a31rakoit_new_uImage_20201026 | main image |
 
-The other images, e.g. uBoot loader (was already installed), user and user2 images were not downloaded.
+The other images, e.g. uBoot loader (was already installed), user and user2 images were not downloaded during the downgrade process.
 
 > **Note:**
 > If an upgrade is available, it may be installed automatically without any notice! In the 4Stream app you might see that a new version is highlighted with "new" and you might get a popup with a notification. I have not found out, when an update is installed automatically. 
@@ -116,7 +135,7 @@ You may modify the configuration file on your webserver to use different folders
 > **Note:**
 > The modification of the two FQDNs will prevent any further updates!
 
-Here it is documented from v4.2.8826 to v4.2.8026. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
+Here it is documented from v4.2.8826 to v4.2.8020. To get information about the product ID (project), the current version and release date you can use the "getStatusEx" command. The following output is "enhanced" / beautified with the tool "jq" (JSON processor):
 
 ```
 curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
@@ -271,6 +290,7 @@ curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
   "priv_prj": "RP0011_WB60_S",
   "project_build_name": "a31rakoit",
   "Release": "20220427",
+  ...
 ```
 
 At first you have to download the following XML files, install them in the appropriate directory on your webserver (you may keep the path and create the directories as required). 
@@ -288,7 +308,7 @@ At first you can download the actual ***products.xml*** file, remove everything 
 curl -O http://silenceota.linkplay.com/wifi_audio_image/products.xml
 ```
 
-I've modified the FQDNs to point directly to the IP address of my web server and have only these three products in the list:
+I've modified the FQDNs to point directly to the IP address of my web server and have only these three products in the list (only the 'product' in the middle with product ID ***RP0011_WB60_S*** is used in the example):
 ```
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <productList>
@@ -296,19 +316,19 @@ I've modified the FQDNs to point directly to the IP address of my web server and
     <productid>RP0011_WB60</productid>
     <hardwareversion>WiiMu-A31</hardwareversion>
     <UUID>FF31F09E</UUID>
-    <major-url>http://10.1.1.22/a31/RP0011_WB60/20200220/product.xml</major-url>
+    <major-url>http://10.1.1.22/linkplay/a31/RP0011_WB60/20200220/product.xml</major-url>
   </product>
   <product>
     <productid>RP0011_WB60_S</productid>
     <hardwareversion>WiiMu-A31</hardwareversion>
     <UUID>FF31F09E</UUID>
-    <major-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/product.xml</major-url>
+    <major-url>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/20200220/product.xml</major-url>
   </product>
   <product>
     <productid>UP2STREAM_PRO_V3</productid>
     <hardwareversion>WiiMu-A31</hardwareversion>
     <UUID>FF31F09E</UUID>
-    <major-url>http://10.1.1.22/a31/UP2STREAM_PRO_V3/20200220/product.xml</major-url>
+    <major-url>http://10.1.1.22/linkplay/a31/UP2STREAM_PRO_V3/20200220/product.xml</major-url>
   </product>
 </productList>```
 
@@ -346,25 +366,23 @@ Here is a copy from the file with version 4.2.8020, release date 0200220 for ref
 </product>
 ```
 
-Modify the <major-version> in the ***product.xml*** file to be one day ahead of your current release date, e.g. 20220428 if your current release date is 20220427. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device! As before I've also modified the FQDNs to point to my own domain and the subdirectory names to be more descriptive.
+Modify the <major-version> in the ***product.xml*** file to be one day ahead of your current release date, e.g. 20220428 if your current release date is 20220427. You may also combine the content with a different MCU (project). Be sure that the project name is exactly matching your device! As before I've also modified the FQDNs to point to my own domain and the subdirectory names to be more descriptive. The last two files with '.jffs2' are removed, because they were not available from the update server (actually they have an error message as a content that the file was not available).
 ```
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <product>
   <major-version>20220428</major-version>
   <sign>27178fb574eafbdab8e1493a1569dd36</sign>
-  <md5-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/md5.txt</md5-url>
-  <ver-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/MVver</ver-url>
-  <layout-url>http://10.1.1.22/a31/RP0011_WB60_S/20200220/layout</layout-url>
-  <image-uboot>http://10.1.1.22/a31/RP0011_WB60_S/uboot_v632.img</image-uboot>
-  <image-backup>http://10.1.1.22/a31/RP0011_WB60_S/backup_new_v1141.img</image-backup>
-  <image-kernel>http://10.1.1.22/a31/RP0011_WB60_S/20200220/a31rakoit_new_uImage</image-kernel>
-  <image-user>http://10.1.1.22/a31/RP0011_WB60_S/20200220/user.jffs2</image-user>
-  <image-user2>http://10.1.1.22/a31/RP0011_WB60_S/20200220/user2.jffs2</image-user2>
+  <md5-url>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/20200220/md5.txt</md5-url>
+  <ver-url>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/20200220/MVver</ver-url>
+  <layout-url>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/20200220/layout</layout-url>
+  <image-uboot>http://10.1.1.22/linkplay/RP0011_WB60_S/uboot_v632.img</image-uboot>
+  <image-backup>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/backup_new_v1141.img</image-backup>
+  <image-kernel>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/20200220/a31rakoit_new_uImage</image-kernel>
   <project>
     <name>RP0011_WB60_S</name>
     <mcu-ver>0022</mcu-ver>
     <mcu-size>670202</mcu-size>
-    <mcu-image>http://10.1.1.22/a31/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
+    <mcu-image>http://10.1.1.22/linkplay/a31/RP0011_WB60_S/RP0011_WB60_S0022.mcu.bin</mcu-image>
   </project>
 </product>
 ```
@@ -391,14 +409,18 @@ Modify the version (ver, 4th column) in the ***layout*** file (4th line) with th
 00d80000:00080000:00000000:00000000:2:jffs2:user:1
 00250000:00b30000:00000040:00415146:0:null:kernel:8533256
 ```
+After you've downloaded the images and prepared the files as described above, you need to inform the device about your own web server. On my Mac mini it's the directory ***/Library/WebServer/Documents/linkplay*** that is accessible as http://10.1.1.22/linkplay. The ***products.xml*** file needs to be located in the main directory of that URL.
 
 Trigger an update with the following commands and verify the progress with Wireshark running on your web server. You may use "http || dns" as a filter to see the downgrade process:
 ```
-curl -s 'http://10.1.1.58/httpapi.asp?command=SetUpdateServer:http://10.1.1.22/a31'
+# inform the device about the local web server URL
+curl -s 'http://10.1.1.58/httpapi.asp?command=SetUpdateServer:http://10.1.1.22/linkplay'
+# trigger an update/downgrade (may not be required)
 curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStartCheck'
+# retrieve the status about the update/downgrade
 curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStatus'
 ```
-To verify that the downgrade was sucessfull, you may request the extended status from the device.
+To verify that the downgrade was sucessful, you may request the extended status from the device.
 ```
 curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
 {
