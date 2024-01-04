@@ -1,7 +1,7 @@
 # Install Persistant Hook
 When the device reboots, any changes in ramfs are lost, but the device is using flash with squashfs and jffs2 file systems. I have not discovered how to modfiy and upload an image to squashfs, but with jffs2 there is a way to install a hook.
 
-Below is an output of mount command (including modification of /etc_ro/web/cgi-bin directory, but that's not required to install a hook) and ***cat /proc/mtd*** output:
+Below is an output of mount command and ***cat /proc/mtd*** output:
 ```
 # mount
 rootfs on / type rootfs (rw)
@@ -19,7 +19,6 @@ mdev on /dev type ramfs (rw,relatime)
 devpts on /dev/pts type devpts (rw,relatime,mode=600)
 /dev/mtdblock8 on /mnt type jffs2 (rw,relatime)
 /dev/mtdblock9 on /vendor type jffs2 (rw,relatime)
-none on /etc_ro/web/cgi-bin type ramfs (rw,relatime)
 
 # cat /proc/mtd
 dev:    size   erasesize  name
@@ -38,7 +37,7 @@ mtd9: 00200000 00010000 "user2"
 The mtd9 device named "user2" is not erased at a reboot, because it contains play lists. It is mounted as /vendor and a hook can be installed in ***/vendor/user*** directory as described below. On the Up2Stream Pro device that I own that directory was already present and a script called ***user.sh*** was located in that directory. 
 
 > **Note:**
-> Neither that directory nor the **user.sh*** script were installed on my Up2Stream Amp device by default. Both devices have the same software version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and were downgraded from v4.6.415145, release date 2022/04/27.
+> Neither that directory nor the **user.sh** script were installed on my Up2Stream Amp device by default. Both devices have the same software version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and were downgraded from v4.6.415145, release date 2022/04/27.
 
 Here's the file from the device where the script was already present (used to start a daemon called ***socket***):
 ```

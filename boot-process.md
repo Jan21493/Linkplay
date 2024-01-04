@@ -139,6 +139,64 @@ mtd9: 00200000 00010000 "user2"
 [    0.700000] 0x000000d80000-0x000000e00000 : "user"
 [    0.712000] 0x000000e00000-0x000001000000 : "user2"
 ...
+
+# cat -n /proc/kmsg
+<5>[    0.000000] Linux version 2.6.36+ (linkplay@linkplay-build-2) (gcc version 4.6.4 (Buildroot 2013.11) ) #1 Mon Jun 22 15:40:26 CST 2020
+<4>[    0.000000]
+<4>[    0.000000]  The CPU feqenuce set to 575 MHz
+<4>[    0.000000]
+<4>[    0.000000]  MIPS CPU sleep mode enabled.
+<6>[    0.000000] CPU revision is: 00019655 (MIPS 24Kc)
+<6>[    0.000000] Software DMA cache coherency
+<6>[    0.000000] Determined physical RAM map:
+<6>[    0.000000]  memory: 04000000 @ 00000000 (usable)
+<4>[    0.000000] Zone PFN ranges:
+<4>[    0.000000]   Normal   0x00000000 -> 0x00004000
+...
+<6>[    0.284000] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+<6>[    0.296000] JFFS2 version 2.2 (NAND) (ZLIB) (RTIME) (c) 2001-2006 Red Hat, Inc.
+<6>[    0.312000] fuse init (API version 7.15)
+...
+<4>[    0.444000] flash manufacture id: ef, device id 40 18
+<4>[    0.456000] W25Q128BV(ef 40180000) (16384 Kbytes)
+<4>[    0.464000] mtd .name = raspi, .size = 0x01000000 (16M) .erasesize = 0x00010000 (64K) .numeraseregions = 0
+<4>[    0.484000] user1 00d80000 - 00e00000  size 00080000
+<4>[    0.492000] user2 00e00000 - 01000000  size 00200000
+<5>[    0.504000] Creating 10 MTD partitions on "raspi":
+<5>[    0.512000] 0x000000000000-0x000001000000 : "ALL"
+<5>[    0.524000] 0x000000000000-0x000000030000 : "Bootloader"
+<4>[    0.532000] ===========check_rootfs offset=42f3be i=64, ret=0  ==============
+<4>[    0.548000] name:Wiimu Rootfs
+<4>[    0.552000] ih_time:0x7b62f05e
+<4>[    0.560000] ih_magic:0x56190527
+<4>[    0.564000] ih_hcrc:0xc82acb88
+<4>[    0.572000] ih_size:6529024 Bytes
+<4>[    0.580000] ih_dcrc:0x39e11b49
+<4>[    0.584000] os=6, arch=5, type=7, comp=1
+<4>[    0.592000] ih_ksz:0x00000000
+<4>[    0.592000]
+<4>[    0.592000]
+<5>[    0.604000] 0x000000030000-0x000000040000 : "Config"
+<5>[    0.616000] 0x000000040000-0x000000050000 : "Factory"
+<5>[    0.624000] 0x000000050000-0x000000250000 : "bkKernel"
+<5>[    0.636000] 0x000000250000-0x00000042f3fe : "Kernel"
+<4>[    0.648000] mtd: partition "Kernel" doesn't end on an erase block -- force read-only
+<5>[    0.664000] 0x00000042f3fe-0x000000d80000 : "RootFS"
+<4>[    0.672000] mtd: partition "RootFS" doesn't start on an erase block boundary -- force read-only
+<5>[    0.692000] 0x000000250000-0x000000d80000 : "Kernel_RootFS"
+<5>[    0.700000] 0x000000d80000-0x000000e00000 : "user"
+<5>[    0.712000] 0x000000e00000-0x000001000000 : "user2"
+<4>[    0.724000] rdm_major = 253
+<4>[    0.728000] GMAC1_MAC_ADRH -- : 0x00000022
+<4>[    0.736000] GMAC1_MAC_ADRL -- : 0x6c25402b
+<4>[    0.744000] Ralink APSoC Ethernet Driver Initilization. v3.1  256 rx/tx descriptors allocated, mtu = 1500!
+<4>[    0.772000] get_rootfs_checked_flag = 1
+<4>[    0.780000] this is not first bootup, ignore check rootfs
+<4>[    0.788000] GMAC1_MAC_ADRH -- : 0x00000022
+<4>[    0.796000] GMAC1_MAC_ADRL -- : 0x6c25402b
+<1>[    0.804000] PROC INIT OK!
+<4>[    0.816000]
+...
 ```
 Install **_dd_** from busybox and **_scp_** from dropbear package (see **_Enable Telnet_** section to install **_busybox_** and **_Hardware and Firmware_** section to install **dropbear**), then
 ```
