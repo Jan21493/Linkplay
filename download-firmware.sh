@@ -14,9 +14,10 @@ curl http://silenceota.linkplay.com/wifi_audio_image/products.xml -o products-or
 # FYI: There is a different products list available for devices with (mainly) A28 module (not covered here)
 # curl http://silenceota.linkplay.com/wifi_audio_image/products_v2.xml -o products_v2-original-`date '+%Y-%m-%d'`.xml
 #
-# 2. download specific product.xml files for all used products (the following short list contains all products from Rakoit/Arylic only!)
+# 2. download specific product.xml files for all used products 
 mkdir product.xmls-`date '+%Y-%m-%d'`
 cd product.xmls-`date '+%Y-%m-%d'`
+# the following short list contains all products from Rakoit/Arylic only!
 curl http://ota.rakoit.com/release/ARYLIC_A50N/product.xml -o product-ARYLIC_A50N.xml  
 curl http://ota.rakoit.com/release/Audioengine_X20_S/product.xml -o product-Audioengine_X20_S.xml  
 curl http://ota.rakoit.com/release/Audioengine_X20_S/product.xml -o product-AE1W.xml

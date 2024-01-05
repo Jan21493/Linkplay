@@ -39,7 +39,7 @@ mtd9: 00200000 00010000 "user2"
 The mtd9 device named "user2" is not erased at a reboot, because it contains play lists. It is mounted as /vendor and a hook can be installed in ***/vendor/user*** directory as described below. On the Up2Stream Pro device that I own that directory was already present and a script called ***user.sh*** was located in that directory. 
 
 > **Note:**
-> Neither that directory nor the **user.sh** script were installed on my Up2Stream Amp device by default. Both devices have the same software version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and were downgraded from v4.6.415145, release date 2022/04/27.
+> Neither that directory nor the **user.sh** script were installed on my Up2Stream Amp device by default. Both devices have the same software version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and were downgraded from v4.6.415145, release date 2022/04/27. 
 
 Here's the file from the device where the script was already present (used to start a daemon called ***socket***):
 ```
@@ -57,41 +57,15 @@ echo $sn
 if [ $sn -eq 0 ]; then
         /vendor/user/socket &
 fi
-
-# ######### additional code to install telnetd and more #############
-# get telnetd from full version of busybox and start in background
-mkdir /tmp/bin
-wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
-chmod 555 /tmp/bin/busybox
-ln -s /tmp/bin/busybox /tmp/bin/telnetd
-sn=`ps | grep busybox | wc -l`
-if [ $sn -eq 1 ]; then
-  killall busybox
-fi
-sn=`ps | grep telnetd | wc -l`
-if [ $sn -eq 1 ]; then
-  killall telnetd
-fi
-/tmp/bin/telnetd telnetd -l/bin/ash &
-
-# shut down WiFi
-ifconfig apcli0 down
-ifconfig ra0 down
-sleep 60
-ifconfig apcli0 down
-echo "WiFi disabled!"
-
-# Uncomment to disable sleep after 15 minutes
-#while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
 ```
-For testing purpose, you may ***reboot*** and ***telnet*** to the device afterwards.
+Just append the code below at the end of that file. On the device where the script was not present, I've just created it.
 
-Here's the file from the device where the script was NOT present. There is a little "enhancement" included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
+Compared to the the section [Enable telnetd](/TELNETD.md), the code below has a little enhancement included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
 
-A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just help (see shell script below). You may create symbolic links for these commands (recommended, see below for an example) or start them directly, e.g. ***/tmp/bin/busybox dmesg***.
+A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just 'help' (see shell script below). You may create symbolic links for the commands you need (recommended, see below for an example) or start them directly, e.g. ***/tmp/bin/busybox dmesg***.
 ```
 mkdir /vendor/user
-cat <<\EOF > /vendor/user/user.sh
+cat <<\EOF >> /vendor/user/user.sh
 #!/bin/sh
 
 sleep 5
@@ -107,10 +81,11 @@ echo '#!/bin/sh' >/tmp/bin/help
 echo '/tmp/bin/busybox --help' >>/tmp/bin/help
 chmod 755 /tmp/bin/help
 
-# shut down WiFi
+# shut down WiFi - use only if the device is connected by LAN - eth0
 ifconfig apcli0 down
 ifconfig ra0 down
 sleep 600
+ifconfig apcli0 down
 ifconfig apcli0 down
 
 # Uncomment to disable sleep after 15 minutes
@@ -120,14 +95,16 @@ chmod 755 /vendor/user/user.sh
 cd /vendor/user
 ls -l
 ```
-The shutdown of "apcli0" does not work within the script, however it works a bit later if executed manually.
+The shutdown of the 'apcli0' WiFi interface does not work within the script, however it works a bit later if executed manually.
 
 So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
 
 > **IMPORTANT:**
 > The hook is NOT called, if the device got stuck during an upgrade, e.g. if you have a ***products.xml*** file with a product ID that is matching your product that triggers an upgrade, but got stuck for some reasons. Therefore I recommend to rename the ***products.xml*** file on your server to something else and block or redirect any upgrade requests on the Internet. See [Downgrade Firmware](/Downgrade.md) section at the end for details. 
 
-The good thing is, that this hook even suvives an upgrade that is done afterwards (tested with v4.6.415145, release date 2022/04/27.):
+For testing purpose, you may ***reboot*** and ***telnet*** to the device afterwards.
+
+> IMPORTANT: The good thing is, that this hook even suvives an upgrade that is done afterwards (tested with v4.6.415145, release date 2022/04/27.):
 ```
 Mac-mini ~ % curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
 {

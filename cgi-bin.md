@@ -1,7 +1,7 @@
 # Allow own shell scripts in cgi-bin
 By default the cgi-bin directory is read-only, but there is a way to make it writable to be able to install own shell scripts on the device. 
 
-Initially I was looking for a way to add a notification message during play of music. There is a binary called ***"smplayer"*** preinstalled on the device that is exactly doing what I was looking for, even with nice fading of the music.
+Initially I was looking for a way to add a notification message during play of music. There is a binary called ***smplayer*** preinstalled on the device that is exactly doing what I was looking for, even with nice fading of the music.
 
 Here's a shell script called ***notice.sh*** that is calling that program:
 ```
@@ -45,8 +45,8 @@ You may add these commands to a persistant hook, see [Install Persistant Hook](/
 Now you can play a notice message on the device by calling your script:
 ```
 curl 'http://10.1.1.52/cgi-bin/notice.sh?play=http://10.1.1.22/mp3/SaunaIstAufgeheizt.mp3'
-# if you have downloaded any messages to the Linkplay device itself, you play a message from local storage
+# if you have downloaded any messages to the Linkplay device itself, you may play a message from local storage
 curl 'http://10.1.1.52/cgi-bin/notice.sh?play=/tmp/SaunaIstAufgeheizt.mp3'
 ```
 > **Note:**
-> Meanwhile Arylic has added an API call to play a notification message: ***/httpapi.asp?command=playPromptUrl:<url>***, see https://developer.arylic.com/httpapi/#play-notification-sound for details, but there might be other use cases.
+> Meanwhile Arylic has added an API call to play a notification message: ***/httpapi.asp?command=playPromptUrl:\<url\>***, see https://developer.arylic.com/httpapi/#play-notification-sound for details, but there might be other use cases.

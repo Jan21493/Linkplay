@@ -28,13 +28,13 @@ More information about the hardware and Firmware, file systems, including inform
 Information about the boot process, file systems including environment (NVRAM). [Reverse Engineering](/boot-process.md)
 
 ## Downgrade Firmware
-The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020). That version still has some vulnerabilites to be able to get onto the CLI with telnet by pushing a single command to these devices. Although it is good when the vendor is providing upgrades with additional feature and security fixes, I'd still like to be able to "hack" into the CLI. Therefore I had to downgrade the firmware. [Downgrade Firmware](/Downgrade.md)
+The first version on my devices was 4.2.8020 from 2020/02/20 (20th of Feb 2020). That version still has some vulnerabilites to be able to get onto the CLI with telnet by pushing a single command to these devices. Although it is good when the vendor is providing upgrades with additional feature and security fixes, I'd still like to be able to "hack" into the CLI. Therefore I had to downgrade the firmware. See [Downgrade Firmware](/Downgrade.md) and next section for more information.
+
+## Download and Prepare Firmware on your own web server
+If you have some Linkplay devices I have compiled a list / script with useful commands (mainly 'curl')' to download XML files, images and more for version 4.2.80 mentioned above and latest version. There is a lot of information, especially for devices with Linkplay A31 module, but may also be a starting point for other Linkplay modules. The script may help you to download and prepare the firmware on your own web server. [Download and prepare Firmware](/download-firmware.md)
 
 ## Install Persistant Hook
 When the device reboots, any changes in ramfs are lost, however there is a way to install a script or command so that it survives a reboot. [Install Persistant Hook](/persistant-hook.md)
-
-## Download and Prepare Firmware on your own web server
-If you have some Linkplay devices I have compiled a list / script with useful commands (mainly curl) to download XML files, images and more for two different versions. It contains a lot of devices with Linkplay A31 module, but may also be a starting point for other Linkplay modules. The script may help you to download and prepare the firmware on your own web server. [Download and prepare Firmware](/download-firmware.md)
 
 ## Allow own shell scripts in cgi-bin
 By default the cgi-bin directory is read-only, but there is a way to make it writable to be able to install own shell scripts on the device. See [Allow own shell scripts in cgi-bin](/cgi-bin.md)

@@ -40,14 +40,11 @@ The XML file contains a list of products with their ID and more, including an UR
 <productList>
 ...
 <product>
-<productid>RP0011_WB60</productid>
-<hardwareversion>WiiMu-A31</hardwareversion>
-<UUID>FF31F09E</UUID>
-<major-url>
-http://ota.rakoit.com/release/RP0011_WB60/product.xml
-</major-url>
+  <productid>RP0011_WB60</productid>
+  <hardwareversion>WiiMu-A31</hardwareversion>
+  <UUID>FF31F09E</UUID>
+  <major-url>http://ota.rakoit.com/release/RP0011_WB60/product.xml</major-url>
 </product>
-<product>
 ...
 </productList>
 ```
@@ -85,22 +82,22 @@ The example was downloaded in Oct 2020:
     <mcu-ver>24</mcu-ver>
     <mcu-size>672498</mcu-size>
     <mcu-image>http://ota.rakoit.com/release/RP0011_WB60/RP0011_WB60-0024-99617ee3-08182020.mcu.bin</mcu-image>
-    </project>
+  </project>
 </product>
 ```
 The URLs include a "random" ID that might be mapped to the product ID and a subdirectory with the version (date) for some files. The MCU files follow a different structure with the product ID used as a subdirectory  and a version number that is included in the name of the image.
 | XML ID  | Subdirectory | Description |
 | --------------- | ------------- | ------------- |
-| md5-url | major-version | plain text file with MD5 checksums for image files (uBoot, backup, user2, kernel)  |
-| ver-url | major-version | plain text file with version information and release date |
-| layout-url | major-version | plain text file with layout (e.g. offset, size, version, fstype, name, size) of file system in flash (user2, user, kernel) |
-| image-kernel | major-version | main binary image for kernel |
-| image-user | major-version | image for user file system (persistent) |
-| image-user2 | major-version | image for user file system (persistent) |
-| image-uboot | - | boot loader uBoot |
-| image-backup | - | backup image |
+| \<md5-url\> | major-version | plain text file with MD5 checksums for image files (uBoot, backup, user2, kernel)  |
+| \<ver-url\> | major-version | plain text file with version information and release date |
+| \<layout-url\> | major-version | plain text file with layout (e.g. offset, size, version, fstype, name, size) of file system in flash (user2, user, kernel) |
+| \<image-kernel\> | major-version | main binary image for kernel |
+| \<image-user\> | major-version | image for user file system (persistent) - not available for download |
+| \<image-user2\> | major-version | image for user file system (persistent) - not available for download |
+| \<image-uboot\> | - | boot loader uBoot |
+| \<image-backup\> | - | backup image |
 
-I'm not sure if the **<sign>** tag is used. I've modified the URLs (different FQDN and path) and got no error. Only the following files are downloaded during an upgrade and in that order (verified with Up2Stream Amp v2.0 and Wireshark):
+I'm not sure if the **\<sign\>** tag is used at all and what is covered with that 'signature'. I've modified the URLs (different FQDN and path) and got no error. Only the following files are downloaded during an upgrade and in that order (verified with Up2Stream Amp v2.0 and Wireshark):
 | URL | Description |
 | --------------- | ------------- |
 | http://silenceota.linkplay.com/wifi_audio_image/products.xml | List of all Linkplay products in XML format with infos and URL |
@@ -420,7 +417,7 @@ curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStartCheck'
 # retrieve the status about the update/downgrade
 curl -s 'http://10.1.1.58/httpapi.asp?command=getMvRemoteUpdateStatus'
 ```
-To verify that the downgrade was sucessful, you may request the extended status from the device.
+To verify that the downgrade was sucessful, you may retrieve the extended status from the device.
 ```
 curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
 {

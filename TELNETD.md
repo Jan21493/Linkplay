@@ -24,4 +24,4 @@ The tool **_"busybox"_** is like a swiss army knife and combines a lot of CLI co
 
 A version of busybox is provided here (see binary directory). That binary is compatible with the SoC that is running on the Linkplay A31 module, see [Hardware and Firmware](/Hardware.md) for details about the hardware.
 
-There is an OpenWRT archive available where you can get precompiled binaries for almost all utilities you may need. See section [Hardware and Firmware](/Hardware.md) for details.
+There is an OpenWRT archive available where you can get precompiled binaries for almost all utilities you may need. See section [Firmware](/Hardware.md#firmware) for details.

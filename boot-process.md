@@ -451,10 +451,11 @@ nvram_get 2860 lan_netmask
 
 # displays password admin and sets a new one
 nvram_get 2860 Password
-nvram_set Password newpassword
+nvram_set 2860 Password newpassword
 ```
+The option '2860' is optional and may be skipped.
 
-The commands are located here:
+The commands to read and manipulate the NVRAM are located here:
 ```
 cd /bin
 ls l
@@ -466,7 +467,7 @@ lrwxrwxrwx    1 1000     1000           11 nvram_get -> ralink_init
 ...
 ```
 
-I found a documentation for these commands:
+I found a documentation for these commands (not matching 100%):
 ```
 Usage:
 a. get: nvram_get [<2860/rtdev>] <field>
