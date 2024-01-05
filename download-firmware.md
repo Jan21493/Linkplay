@@ -58,7 +58,7 @@ curl http://silenceota.linkplay.com/wifi_audio_image/products_v2.xml -o products
 ## 2. Download latest specific product.xml files 
 You should download the product.xml files for your product (and maybe a few more), because the URLs may alway point to the latest version only. Therefore it may be hard to guess the name for older versions or it's even impossible to download them if the URL stays the same. I recommend to put them into a directory with the (assumed) release date included in the directory name. 
 
-It's easy to see that the download URLs are the same for products with the same ***<UUID>***
+It's easy to see that the download URLs are the same for products with the same ***`<UUID>`***
 
 
 specific p
