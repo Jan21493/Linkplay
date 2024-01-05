@@ -1,6 +1,7 @@
 # Download and Prepare Firmware on your own web server
 After I had downloaded some firmware files my web server became quite messy, so I've created a list of commands to download firmware for different products and versions. 
 
+```
 /Library/WebServer/Documents/linkplay
 |-- products-original-2024-01-03.xml                            # downloaded products.xml file renamed by current date for future use
 |-- products.xml                                                # crafted file that contains the products I own and the URLs are pointing to this local web server
@@ -25,6 +26,7 @@ After I had downloaded some firmware files my web server became quite messy, so 
 |    +-- ...
 +-- mp3                                                         # notification messages in mp3 format
 ...
+```
 
 I've provided shell script that can be used to download products.xml, the specific product.xml files for the products in use and their images for the two important versions:
 - 20200220 - version with security vulnerability to allow telnet to the device
