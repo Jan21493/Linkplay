@@ -438,6 +438,11 @@ ApCliChannel=6
 # a similar output will provide
 ralink_init show 2860
 ```
+It's even possible to get such an output from remote via build-in shell script (script is located in /etc_ro/web/cgi-bin):
+```
+curl 'http://10.1.1.52/cgi-bin/ExportSettings.sh'
+```
+
 To read a specific variable from NVRAM or modify its value use these commands:
 ```
 nvram_get 2860 HostName

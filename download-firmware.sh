@@ -6,7 +6,7 @@
 mkdir /Library/WebServer/Documents/linkplay
 cd /Library/WebServer/Documents/linkplay
 #
-# NOTE: don't forget to add read rights for the whole linkplay subdirectories and files and the final end!!
+# NOTE: don't forget to add read rights for the whole linkplay subdirectories and files at the final end!!
 chmod -v -R u=rwx,g=rx,o=rx *
 # 1. download products.xml with current date. The list contains devices with (mainly) A31 module
 curl http://silenceota.linkplay.com/wifi_audio_image/products.xml -o products-original-`date '+%Y-%m-%d'`.xml
