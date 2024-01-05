@@ -37,3 +37,8 @@ You may only want to download the files that are interesting for you. The shell 
 - http://ota.rakoit.com/release/RP0011_WB60_S/product.xml (example for one of the product IDs)
 
 See shell script for more information [Shell script to download](/download-firmware.sh)
+
+> NOTE: Don't forget to add read and execute (enter directory) rights for the whole linkplay subdirectories and files at the final end!!
+```
+chmod -v -R u=rwx,g=rx,o=rx *
+```
