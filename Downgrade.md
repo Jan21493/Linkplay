@@ -100,7 +100,7 @@ The URLs include a "random" ID that might be mapped to the product ID and a subd
 | image-uboot | - | boot loader uBoot |
 | image-backup | - | backup image |
 
-I'm not sure if the **<sign>** tag is used. I've modified the URLs (different FQDN and path) and got no error. Only the following files are downloaded during an upgrade (verified with Up2Stream Amp v2.0):
+I'm not sure if the **<sign>** tag is used. I've modified the URLs (different FQDN and path) and got no error. Only the following files are downloaded during an upgrade and in that order (verified with Up2Stream Amp v2.0 and Wireshark):
 | URL | Description |
 | --------------- | ------------- |
 | http://silenceota.linkplay.com/wifi_audio_image/products.xml | List of all Linkplay products in XML format with infos and URL |
@@ -432,3 +432,31 @@ curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
   "Release": "20200220",
   "branch": "stable/wiimu-4.2",
 ```
+> **IMPORTANT:**
+> I recommend to rename the ***products.xml*** file on your server after an up- or downgrade to something else and block or redirect any upgrade requests on the Internet. If a ***products.xml*** is found on that server in the proper directory (the default URL is pointing to http://silenceota.linkplay.com/wifi_audio_image) then an automatic upgrade may be triggered. 
+
+## Problem with Upgrade after downgrade
+In v4.6 Arylic has added a command to play a notification URL from my home automation system while music is playing. The music is faded out before the notification message is played, so this is quite nice. After I had installed a permanent hook that even survives a reboot I wanted to upgrade afterwards. See [Install Persistant Hook](/persistant-hook.md) for details.
+
+I don't know why, but an upgrade with cli commands always got stuck after the device has fetched the ***MVver_20220427*** file. The three files ***products.xml***, ***product.xml***, and ***MVver_new*** were downloaded properly and temporarily stored in ***/tmp*** directory on the device. For some reason the device believes that an upgrade is not required, so the upgrade process is stopped. 
+
+I thought that a variable in NVRAM might block the upgrade and had a closer look to them with ***ralink_init show 2860***, but could not find an answer. That's what I have tried:
+```
+ralink_init show 2860
+
+nvram_set 2860 FirmwareServerVersion 4.2.8020
+nvram_set 2860 Ota_Fw_New 4.2.8020
+nvram_set 2860 part_ver_kernel 8020
+reboot
+```
+I also tried
+```
+nvram_set 2860 FirmwareServerVersion 0
+nvram_set 2860 Ota_Fw_New 0
+nvram_set 2860 McuServerVersion 0
+nvram_set 2860 McuSaveVersion 0
+nvram_set 2860 Ota_Mcu_New 0
+```
+I also played around with the FQDNs (the DNS hostname or IP address) and the URLs that are used in ***products.xml***, ***product.xml***, and ***MVver*** without any luck. I tried IP addresses as well as FQDNs. I even pointed to the real update servers on the Internet, but that failed with the same result as well. So it looks that the problem must be on the device itself. 
+
+There is a simple way to work around that problem: install the upgrade via 4Stream app from you mobile phone. It was working on my iPhone (4Stream app version 2.8.11908) and I upgraded from v4.2.8020 release date 2020/02/20 to v4.6.415145, release date 2022/04/27.

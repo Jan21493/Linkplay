@@ -124,6 +124,9 @@ The shutdown of "apcli0" does not work within the script, however it works a bit
 
 So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
 
+> **IMPORTANT:**
+> The hook is NOT called, if the device got stuck during an upgrade, e.g. if you have a ***products.xml*** file with a product ID that is matching your product that triggers an upgrade, but got stuck for some reasons. Therefore I recommend to rename the ***products.xml*** file on your server to something else and block or redirect any upgrade requests on the Internet. See [Downgrade Firmware](/Downgrade.md) section at the end for details. 
+
 The good thing is, that this hook even suvives an upgrade that is done afterwards (tested with v4.6.415145, release date 2022/04/27.):
 ```
 Mac-mini ~ % curl -s 'http://10.1.1.52/httpapi.asp?command=getStatusEx' | jq
