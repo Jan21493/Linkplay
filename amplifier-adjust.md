@@ -15,6 +15,8 @@ R1 in TPA3116D2 data sheet is R19 in Arylic PCB and R2 is R18. The arrows in the
 
 ![Arylic Up2Stream Amp TPA3116D2 Power Amplifier](https://github.com/Jan21493/Linkplay/assets/25911411/34e3e97c-ece0-4dd1-812d-55a416b5fb12)
 
+The smb resistors are quite small, so it's not easy to solder them, but manageable with a magnifying glass. The 'R0603' refers to the form factor 0603 with a size of 0.6 mm × 0.3 mm.
+
 On the Up2Stream Amp board with pcb version 1.0 the numbers are printed on the pcb, so it's easy to find them:
 
 ![Arylic Up2Stream Amp v2 0 - pcb v1 0](https://github.com/Jan21493/Linkplay/assets/25911411/36736092-f36c-44aa-8c4c-ea2fb2a68f15)
