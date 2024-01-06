@@ -25,7 +25,7 @@ On the Up2Stream Amp board with pcb version 1.1 the numbers are not printed on t
 
 ![Arylic Up2Stream Amp v2 0 - pcb v1 1](https://github.com/Jan21493/Linkplay/assets/25911411/1f65d660-1c93-4fbc-85b3-a65eaa6cdbd2)
 
-I have removed R18 (R1 in the data sheet for the TPA3116D2) and used 5.6k for R19 (R1 in the data sheet) and now the volume is softer. Now its easier to adjust the volume with the slider in the app as well. 
+I have removed R18 (R2 in the data sheet for the TPA3116D2) and used 5.6k for R19 (R1 in the data sheet) and now the volume is softer. Now its easier to adjust the volume with the slider in the app as well. 
 
 To set and verify volume control, use these API commands:
 ```
