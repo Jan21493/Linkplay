@@ -11,7 +11,7 @@ In chapter 7.3 Feature Description, especially 7.3.1 Gain Setting and Master and
 | Master | 26dB   | 20k   | 100k  | 30k (default setting for Arylic PCB) |
 | Master | 32dB   | 39k   | 100k  | 15k |
 
-R1 in TPA3116D2 data sheet is R19 in Arylic PCB and R2 is R18. The arrows n the following schema for the Arlyic pcb are pointing to these resistors.  
+R1 in TPA3116D2 data sheet is R19 in Arylic PCB and R2 is R18. The arrows in the following schema for the Arlyic pcb are pointing to these resistors.  
 
 ![Arylic Up2Stream Amp TPA3116D2 Power Amplifier](https://github.com/Jan21493/Linkplay/assets/25911411/34e3e97c-ece0-4dd1-812d-55a416b5fb12)
 
