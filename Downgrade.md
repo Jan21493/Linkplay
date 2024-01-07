@@ -457,3 +457,42 @@ nvram_set 2860 Ota_Mcu_New 0
 I also played around with the FQDNs (the DNS hostname or IP address) and the URLs that are used in ***products.xml***, ***product.xml***, and ***MVver*** without any luck. I tried IP addresses as well as FQDNs. I even pointed to the real update servers on the Internet, but that failed with the same result as well. So it looks that the problem must be on the device itself. 
 
 There is a simple way to work around that problem: install the upgrade via 4Stream app from you mobile phone. It was working on my iPhone (4Stream app version 2.8.11908) and I upgraded from v4.2.8020 release date 2020/02/20 to v4.6.415145, release date 2022/04/27.
+
+> **Update on the issue:**
+> It looks that you just have to wait about 10 minutes. Then an automatic upgrade is called. I installed ***dnsmasq*** with the redirects shown above, and created a symbolic link
+> for wifi_audio_image pointing to linkplay as explained in  [Download and prepare Firmware](/download-firmware.md). The ***'products-... .xml*** file has the following content and the content is exactly matching
+> to the content that is available online.
+``` 
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<productList>
+  <product> 
+    <productid>RP0011_WB60</productid>  
+    <hardwareversion>WiiMu-A31</hardwareversion>  
+    <UUID>FF31F09E</UUID>  
+    <major-url>http://silenceota.linkplay.com/linkplay/a31/RP0011_WB60/product-RP0011_WB60-20220427.xml</major-url> 
+  </product>  
+</productList>
+```
+The ***product.xml*** file has the following content:
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<product>
+  <major-version>20220427</major-version>
+  <sign>94ccec31377c06c429bf2e167240696c</sign>
+  <md5-url>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/20220427/md5.txt</md5-url>
+  <ver-url>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/20220427/MVver_20220427</ver-url>
+  <layout-url>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/20220427/layout</layout-url>
+  <image-uboot>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/uboot_v632.img</image-uboot>
+  <image-backup>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/backup_new_v1141.img</image-backup>
+  <image-kernel>http://silenceota.linkplay.com/wifi_audio_image/a31/a31rakoit/20220427/a31rakoit_new_uImage_20220427</image-kernel>
+  <image-user>http://silenceota.linkplay.com/wifi_audio_image/a31rakoit/20220427/user.jffs2</image-user>
+  <image-user2>http://silenceota.linkplay.com/wifi_audio_image/a31rakoit/20220427/user2.jffs2</image-user2>
+  <project>
+    <name>RP0011_WB60_S</name>
+    <mcu-ver>24</mcu-ver>
+    <mcu-size>672538</mcu-size>
+    <mcu-image>http://ota.rakoit.com/linkplay/a31/RP0011_WB60_S/RP0011_WB60_S-0024-99617ee3-08182020.mcu.bin</mcu-image>
+  </project>
+</product>
+```
+
