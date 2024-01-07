@@ -45,6 +45,10 @@ Create a base directory on your web server, e.g. 'linkplay'. On my Mac mini the 
 mkdir /Library/WebServer/Documents/linkplay
 cd /Library/WebServer/Documents/linkplay
 ```
+Later I realized, that it might be easier to allow exactly the same URLs locally, so I added a symbolic link to the default subdirectory for the ***product.xml*** file:
+```
+ln -s /Library/WebServer/Documents/linkplay /Library/WebServer/Documents/wifi_audio_image
+```
 ## 1. Download latest products.xml file
 The XML file products.xml contains a list of all products for which downloads are available. The following list contains devices with (mainly) A31 module.
 ```
