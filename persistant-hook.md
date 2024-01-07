@@ -95,7 +95,7 @@ chmod 755 /vendor/user/user.sh
 cd /vendor/user
 ls -l
 ```
-The shutdown of the 'apcli0' WiFi interface does not work within the script, however it works a bit later if executed manually.
+The shutdown of the 'apcli0' WiFi interface does not work within the script when called in the first place, however it works a bit later if executed manually. So I added the 600 seconds (10 minutes) sleep and executed the command twice. Now it looks that it works as expected.
 
 So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
 
