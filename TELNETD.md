@@ -17,7 +17,7 @@ chmod 555 /tmp/bin/busybox;
 /tmp/bin/busybox telnetd -l/bin/ash;
 ```
 > **Note:**
-> Don't forget to add a ";" at the end inside the quotes. Replace all spaces with "+" if you want to create your own URL with curl.
+> Don't forget to add a ";" at the end inside the quotes. Replace all spaces with "+" if you want to create your own URL with curl. The length of the message is limited, so don't try to add too much code.
 
 The tool **_"busybox"_** is like a swiss army knife and combines a lot of CLI commands in a single binary file. That file was stripped down in the version that was running on my Linplay device and does not include a telnetd anymore. Therefore you have to get a full version from somewhere. 
 
