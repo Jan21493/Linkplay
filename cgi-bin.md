@@ -40,7 +40,7 @@ export WIIMU_play='http://10.1.1.22/linkplay/scripts/Modification_installed.mp3'
 /etc_ro/web/cgi-bin/notice.sh
 unset WIIMU_play
 ```
-You may add these commands to a persistant hook, see [Install Persistant Hook](/persistant-hook.md) for details.
+You may add these commands to a persistent hook, see [Install Persistent Hook](/persistent-hook.md) for details.
 
 Now you can play a notice message on the device by calling your script:
 ```

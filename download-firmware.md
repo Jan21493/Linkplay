@@ -157,7 +157,7 @@ curl --create-dirs http://silenceota.linkplay.com/wifi_audio_image/drPb6dKCSrFvP
 > NOTE:
 > There are no product.xml files for new products like UP2STREAM_PRO_V3, UP2STREAM_AMP_V3, or UP2STREAM_AMP_V4, but that's no problem, because of the conclusion from above and the fact that there IS a product in the list that has the same UUID / 'cryptic' ID (in the latest version). 
 
-It may not be important to have the MCU files for an older version. You can just copy the part from the latest version. Even if the device will not work with that MCU, the main reason to do a downgrade is to install a persistent hook in flashfs that survives a reboot and even an upgrade, see [Install Persistant Hook](/persistant-hook.md) After the hook is installed, you may upgrade again to the version that was used before.
+It may not be important to have the MCU files for an older version. You can just copy the part from the latest version. Even if the device will not work with that MCU, the main reason to do a downgrade is to install a persistent hook in flashfs that survives a reboot and even an upgrade, see [Install Persistent Hook](/persistent-hook.md) After the hook is installed, you may upgrade again to the version that was used before.
 
 If there is no product with the same UUID available, but your product is based on the Linkplay A31 module, then it might be possible (although more risky) to install the files for a different product from the same or even another vendor by manipulating the product ID. At the end it's your risk - don't blame me if it is not working and you've bricked your device! 
 

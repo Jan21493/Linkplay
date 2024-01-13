@@ -433,7 +433,7 @@ curl -s 'http://10.1.1.58/httpapi.asp?command=getStatusEx' | jq
 > I recommend to rename the ***products.xml*** file on your server after an up- or downgrade to something else and block or redirect any upgrade requests on the Internet. If a ***products.xml*** is found on that server in the proper directory (the default URL is pointing to http://silenceota.linkplay.com/wifi_audio_image) then an automatic upgrade may be triggered. 
 
 ## Problem with Upgrade after downgrade
-In v4.6 Arylic has added a command to play a notification URL from my home automation system while music is playing. The music is faded out before the notification message is played, so this is quite nice. After I had installed a permanent hook that even survives a reboot I wanted to upgrade afterwards. See [Install Persistant Hook](/persistant-hook.md) for details.
+In v4.6 Arylic has added a command to play a notification URL from my home automation system while music is playing. The music is faded out before the notification message is played, so this is quite nice. After I had installed a permanent hook that even survives a reboot I wanted to upgrade afterwards. See [Install Persistent Hook](/persistent-hook.md) for details.
 
 I don't know why, but an upgrade with cli commands always got stuck after the device has fetched the ***MVver_20220427*** file. The three files ***products.xml***, ***product.xml***, and ***MVver_new*** were downloaded properly and temporarily stored in ***/tmp*** directory on the device. For some reason the device believes that an upgrade is not required, so the upgrade process is stopped. 
 
