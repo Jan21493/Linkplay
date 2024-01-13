@@ -41,7 +41,7 @@ The mtd8 device named "user" is not erased at a reboot, because it may contain a
 
 The mtd9 device named "user2" is not erased at a reboot, because it may contain additional 'vendor' data. It is mounted as /vendor and a hook can be installed in ***/vendor/user*** directory as described below. On the Up2Stream Pro device that I own that directory was already present and a script called ***user.sh*** was located in that directory. 
 
-## Install Hook with code
+## Install Persistent Hook with Code
 After a reset to factory settings with release v4.6.415145, release date 2022/04/27, the device has a web interface. To run this web interface the device calls a shell script ***/vendor/user/user.sh where some code can be added to:
 
 ```
@@ -63,16 +63,20 @@ Create a file in ***/vendor/user*** with the name ***usermod.sh***. The shell sc
 cd /vendor/user
 cat <<\EOF >> /vendor/user/usermod.sh
 #!/bin/sh
-# user modification to allow telnet to the device and shut down WiFi after 5 minutes if device is connected by ethernet.
 
-sleep 10
+# time may be reduced if connected to ethernet - WiFi setup could take a bit longer
+sleep 20
 # get telnetd from full version of busybox and start in background
 mkdir /tmp/bin
+killall busybox
+rm /tmp/bin/busybox
 wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
 chmod 555 /tmp/bin/busybox
 ln -s /tmp/bin/busybox /tmp/bin/telnetd
 ln -s /tmp/bin/busybox /tmp/bin/ash
-/tmp/bin/telnetd telnetd -l/tmp/bin/ash &
+ln -s /tmp/bin/busybox /tmp/bin/netstat
+sync
+/tmp/bin/busybox telnetd -l /tmp/bin/ash &
 
 echo '#!/bin/sh' >/tmp/bin/help
 echo '/tmp/bin/busybox --help' >>/tmp/bin/help
@@ -244,7 +248,7 @@ nvram_set WPAPSK1 Plattfisch09
 ```
 
 ## Install a persistent hook
-Follow instructions from above in section [Install Hook with code](/persistent-hook.md) . Don't forget to make the file executable and add a link to the new script in the existing ***user.sh*** script!
+Follow instructions from above in section [Install persistent hook with code](/persistent-hook.md#install-persistent-hook-with-code) . Don't forget to make the file executable and add a link to the new script in the existing ***user.sh*** script!
 
 ## Configure the device for your WiFi network at home
 If your device is connected by ethernet / LAN cable, then skip this step. Otherwise use an online tool to convert the SSID and password for your WiFi network at home from ASCII to hex. Then configure your device to connect to your WiWi network at home.
