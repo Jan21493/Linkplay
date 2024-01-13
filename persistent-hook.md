@@ -251,9 +251,9 @@ nvram_set WPAPSK1 Plattfisch09
 Follow instructions from above in section [Install persistent hook with code](/persistent-hook.md#install-persistent-hook-with-code) . Don't forget to make the file executable and add a link to the new script in the existing ***user.sh*** script!
 
 ## Configure the device for your WiFi network at home
-If your device is connected by ethernet / LAN cable, then skip this step. Otherwise use an online tool to convert the SSID and password for your WiFi network at home from ASCII to hex. Then configure your device to connect to your WiWi network at home.
+If your device is connected by ethernet / LAN cable, then skip this step. Otherwise use an online tool to convert the SSID and password for your WiFi network at home from ASCII to hex. Then configure your device to connect to your WiWi network at home. The following example is using Melbourne as an SSID and Elwood2005! as the password.
 ```
-curl "http://10.10.10.254/httpapi.asp?command=wlanConnectApEx:ssid=4D656C626F75726E65:ch=0:auth=WPA2PSK:encry=AES:pwd=5265645365613230303521:chext=1"
+curl "http://10.10.10.254/httpapi.asp?command=wlanConnectApEx:ssid=4D656C626F75726E65:ch=0:auth=WPA2PSK:encry=AES:pwd=456C776F6F643230303521:chext=1"
 ```
 > Note: All parameters are required, even a channel! You may set the channel to 0, but it is changed to the channel that is active on your network.
 
@@ -274,7 +274,7 @@ telnet 10.1.1.38 (the IP address that was assigned to the device)
 
 ralink_init show 2860 | grep ApCli
   'ApCliSsid'='4D656C626F75726E65'
-  'ApCliWPAPSK'='5265645365613230303521'
+  'ApCliWPAPSK'='456C776F6F643230303521'
   'ApCliAuthMode'='WPA2PSK'
   'ApCliEncrypType'='AES'
   'ApCliChannel'='6'
