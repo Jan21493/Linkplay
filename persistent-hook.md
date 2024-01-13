@@ -150,3 +150,161 @@ BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)
 Connection closed by foreign host.
 ```
 
+# Alternate Solution
+I found an easier solution to downgrade the firmware, install a hook and upgrade again. This solution is a bit easier and you don't have to manipultate any XML files. The following examples use the IP address 10.1.1.38 that is assigned to another Up2Stream Amp device in my home. You have to adjust this IP address and the one from your PC.
+
+## Get Settings
+Get the current settings from the device. The following example is using WiFi with the build in IP address of the hotspot. On your LAN, the IP address is different:
+```
+curl -s 'http://10.10.10.254/httpapi.asp?command=getStatusEx' | jq
+```
+Verify firmware (version), project, hardware before you continue.
+
+## Download Firmware
+Download the firmware from the Internet to your PC for version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and the latest version (currently 4.6.415145 from 2022/04/27). The following URLs may work for all Linkplay devices from Arylic / Rakoit with a ***Linkplay A31*** module. If you have a different Linkplay module, DON'T install this binary image, because you will likely brick your device. 
+
+It may work with other vendors, but it's your risk and therefore I recommend to follow the instructions in [Download Firmware](/download-firmware.md).
+```
+curl -O http://silenceota.linkplay.com/wifi_audio_image/NTeDAvvJzTUtBekHVnqJrB/20200220/a31rakoit_new_uImage_20200220
+curl -O http://silenceota.linkplay.com/wifi_audio_image/2ANRu7eyAEYtoo4NZPy9dL/20220427/a31rakoit_new_uImage_20220427
+```
+
+## Reset to factory defaults
+This is not a requirement, but I did it to have a clean setup. If you like to use the web interface with v4.6 you have to do a reset to factory defaults before you can use it. The reset to factory defaults may also be done with the following methods:
+ - long press the reset button on the device for 8-10 seconds
+ - use the 4stream app, select the settings wheel for your device, select info menu, scroll to the bottom and select 'restore to factory defaults'
+ - from your PC with shell command, e.g.: curl -s 'http://10.1.1.38/httpapi.asp?command=restoreToDefault'
+
+Wait for the device reboot and notice sound from device via speaker.
+
+> IMPORTANT: You should disconnect the cable from your home network to the Internet to prevent an accidental upgrade. If you are fast, you may ignore this notice. I may take about 10 minutes after the device automatically upgrades to the latest version.
+
+## Connect PC to WiFi hotspot from your device
+If your device is connected by ethernet / LAN cable, then skip this step. Otherwise connect your PC (not mobile phone!) to the WiFi hotspot that starts when the device is turned on. The SSID has the format 'SoundSystem_XXXX', where XXXX is a different hex code for each system. 
+
+> Note: This is an open WLAN, without any security!
+
+## Downgrade Firmware
+Install the firmware for version 4.2.8020 you've downloaded on your device.
+
+```
+curl --user-agent Mozilla -v -F "file=@a31rakoit_new_uImage_20200220" http://10.10.10.254/cgi-bin/upload.cgi
+```
+
+> Note: The installation is not finished when the message 'We are completely uploaded and fine' is shown. It's just the upload that has finished.
+
+The device uploads and installs the firmware. You may get some notification sounds if speakers are connected to your device. At the end it reboots. Wait for the device to come back. It may take about a minute for all steps. 
+
+## Connect PC to WiFi hotspot from your device
+Reconnect to the WiFi hotspot from your device with your PC as described above. If your device is connected by ethernet / LAN cable, then skip this step.
+
+## Install Telnetd
+If your device is connected by ethernet / LAN cable, you have to adjust the IP addresses: the first IP address is from your Linkplay device and the two other IP addresses are from your PC.
+
+> Note: you have to install a web server on your PC, so that the device is able to copy the software 'busybox' from your PC.
+
+```
+curl "http://10.10.10.254/httpapi.asp?command=getsyslog:ip:10.10.10.128/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.10.10.128/linkplay/a31/bin/busybox+-q;chmod+555+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash;"
+```
+Connect to your device via telnet from your PC (you may use putty):
+```
+telnet 10.10.10.254
+```
+> Note: It may take a bit longer, e.g. 20 seconds until you get the telnet prompt.
+
+Verify the SSID and password for your hotspot. You may change the settings from the example and choose your own password. It should have at least 8 characters.
+```
+ralink_init show 2860 | grep 1\'=
+  'SSID1'='SoundSystem_4345'
+  'WPAPSK1'='Plattfisch09'
+nvram_set SSID1 Music
+nvram_set WPAPSK1 Plattfisch09
+```
+
+## Install a persistent hook
+Create a file in ***/vendor/user*** with the name ***usermod.sh*** and add a link to the ***user.sh*** script.
+```
+telnet 10.10.10.254
+cd /vendor/user
+cat <<>>
+
+#!/bin/sh
+
+sleep 10
+# get telnetd from full version of busybox and start in background
+mkdir /tmp/bin
+wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
+chmod 555 /tmp/bin/busybox
+ln -s /tmp/bin/busybox /tmp/bin/telnetd
+ln -s /tmp/bin/busybox /tmp/bin/ash
+/tmp/bin/telnetd telnetd -l/tmp/bin/ash &
+
+echo '#!/bin/sh' >/tmp/bin/help
+echo '/tmp/bin/busybox --help' >>/tmp/bin/help
+chmod 755 /tmp/bin/help
+
+# shut down WiFi after 5 min, but only if the device is connected by LAN (eth2) and got an IP addr on that interface
+sleep 300
+lanIPup=`ifconfig eth2 | grep 'inet addr:' | wc -l`
+if [ $lanIPup -eq 1 ]; then
+  ifconfig ra0 down
+  ifconfig apcli0 down
+  ifconfig apcli0 down
+fi
+unset lanIPup
+
+# Uncomment to disable sleep after 15 minutes (I haven't used this code - just an example from Crymeiriver)
+#while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
+
+echo '/vendor/user/usermod.sh &' >> user.sh
+echo '' >> user.sh
+```
+This code has been tested with a device that is only connected to the WiFi network at home.
+
+## Configure the device for your WiFi network at home
+If your device is connected by ethernet / LAN cable, then skip this step. Otherwise use an online tool to convert the SSID and password for your WiFi network at home from ASCII to hex. Then configure your device to connect to your WiWi network at home.
+```
+curl "http://10.10.10.254/httpapi.asp?command=wlanConnectApEx:ssid=4D656C626F75726E65:ch=0:auth=WPA2PSK:encry=AES:pwd=5265645365613230303521:chext=1"
+```
+> Note: All parameters are required, even a channel! You may set the channel to 0, but it is changed to the channel that is active on your network.
+
+> Note: The device immediately connects to local WiFi network as a client, so you'll loose the connection from the hotspot. You should hear a notification sound that the device has connected to your local WiFi network. Otherwise you have to start again.
+
+There is a command to verify the connect state, but if it does not connect, you can't reach it and it may not have an IP address. So it's just for reference:
+```
+curl "http://10.1.1.38/httpapi.asp?command=wlanGetConnectState"
+```
+The Answer is either PROCESS or OK. 
+--> if PROCESS then connection is not established
+--> if OK the variables shown below are added to NVRAM
+
+## Verify settings
+You may verify the settings with the following command:
+```
+telnet 10.1.1.38 (the IP address that was assigned to the device)
+
+ralink_init show 2860 | grep ApCli
+  'ApCliSsid'='4D656C626F75726E65'
+  'ApCliWPAPSK'='5265645365613230303521'
+  'ApCliAuthMode'='WPA2PSK'
+  'ApCliEncrypType'='AES'
+  'ApCliChannel'='6'
+  'ApCliEnable'='1'
+
+reboot
+```
+Wait for notification sound after device comes back.
+
+## Upgrade to latest firmware
+You may either wait or upgrade the firmware manually.
+```
+curl --user-agent Mozilla -v -F "file=@a31rakoit_new_uImage_20220427" http://10.1.1.38/cgi-bin/upload.cgi
+```
+As before, the device uploads and installs the firmware. At the end it reboots. 
+
+## Verifiy Version
+At the end you may verify the version and telnet access. The default password for the web interface of the device is 'admin'.
+```
+curl -s 'http://10.1.1.38/httpapi.asp?command=getStatusEx' | jq
+telnet 10.1.1.38 
+```
