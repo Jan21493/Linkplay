@@ -448,6 +448,11 @@ To read a specific variable from NVRAM or modify its value use these commands:
 nvram_get 2860 HostName
 nvram_get 2860 lan_ipaddr
 nvram_get 2860 lan_netmask
+nvram_set 2860 HostName MyBoomBox
+nvram_get old_firmware
+# to delete a variable from NVRAM skip '2860' and the value, e.g.
+nvram_set old_firmware
+# Note: the variable is not really deleted, but set to ''
 
 # displays password admin and sets a new one
 nvram_get 2860 Password
