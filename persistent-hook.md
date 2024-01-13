@@ -1,4 +1,4 @@
-# Install Persistant Hook
+# Install Persistent Hook
 When the device reboots, any changes in ramfs are lost, but the device is using flash with squashfs and jffs2 file systems. I have not discovered how to modfiy and upload an image to squashfs, but with jffs2 there is a way to install a hook. That hook even survives an upgrade that is done afterwards (see end of this section)!
 
 To start, you have to enable telnet and that may require a downgrade in the first step. See [Downgrade Firmware](/Downgrade.md) and [Enable telnetd](/TELNETD.md).
