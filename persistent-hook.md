@@ -3,6 +3,7 @@ When the device reboots, any changes in ramfs are lost, but the device is using 
 
 To start, you have to enable telnet and that may require a downgrade in the first step. See [Downgrade Firmware](/Downgrade.md) and [Enable telnetd](/TELNETD.md).
 
+## Information about file systems on the device
 Below is an output of mount command and ***cat /proc/mtd*** output:
 ```
 # mount
@@ -40,6 +41,7 @@ The mtd8 device named "user" is not erased at a reboot, because it may contain a
 
 The mtd9 device named "user2" is not erased at a reboot, because it may contain additional 'vendor' data. It is mounted as /vendor and a hook can be installed in ***/vendor/user*** directory as described below. On the Up2Stream Pro device that I own that directory was already present and a script called ***user.sh*** was located in that directory. 
 
+## Install Hook with code
 After a reset to factory settings with release v4.6.415145, release date 2022/04/27, the device has a web interface. To run this web interface the device calls a shell script ***/vendor/user/user.sh where some code can be added to:
 
 ```
@@ -56,7 +58,7 @@ chmod 777 /vendor/user/ws_server
 > **Note:**
 > The ***telnetd*** is NOT installed, because the file is missing in the (read only) directory /usr/bin. 
 
-Create a file in ***/vendor/user*** with the name ***usermod.sh*** and the following content. It has been tested with devices connected via ethernet and wireless. Please adjust the IP address for the web server (in my case 10.1.1.22).
+Create a file in ***/vendor/user*** with the name ***usermod.sh***. The shell script has been tested with different devices that are connected via ethernet and wireless. Don't forget to adjust the IP address for the web server (in my case 10.1.1.22)!
 ```
 cd /vendor/user
 cat <<\EOF >> /vendor/user/usermod.sh
@@ -81,6 +83,7 @@ sleep 300
 lanIPup=`ifconfig eth2 | grep 'inet addr:' | wc -l`
 if [ $lanIPup -eq 1 ]; then
   ifconfig ra0 down
+  ifconfig ra0 down
   ifconfig apcli0 down
   ifconfig apcli0 down
 fi
@@ -88,11 +91,12 @@ unset lanIPup
 
 # Uncomment to disable sleep after 15 minutes (I haven't used this code - just an example from Crymeiriver)
 #while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
-EOF
 
+EOF
 ```
-Add a link to the new script in the existing ***user.sh*** script. Here's the content:
+Make the file executable and add a link to the new script in the existing ***user.sh*** script.
 ```
+chmod 755 usermod.sh
 echo '' >> user.sh
 echo '/vendor/user/usermod.sh &' >> user.sh
 echo '' >> user.sh
@@ -100,10 +104,13 @@ echo '' >> user.sh
 
 The shutdown of the 'apcli0' WiFi interface does not work within the script when called in the first place, however it works a bit later if executed manually. So I added the 300 seconds (5 minutes) sleep and executed the command twice. Now it looks that it works as expected. I also added some code, so that the WiFi interface is NOT shut down if the Ethernet / LAN interface (eth2) does not get an IP address.
 
+## Differences in telnetd
+
 Compared to the the section [Enable telnetd](/TELNETD.md), the code above has a little enhancement included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
 
 A list of all commands that are included is shown with ***/tmp/bin/busybox --help*** or just 'help' (see shell script below). You may create symbolic links for the commands you need (recommended, see below for an example) or start them directly, e.g. ***/tmp/bin/busybox dmesg***.
 
+## Additional Infos
 So far, the device fetches the full version of busybook after each reboot, but stores that binary in ramfs. With ***df*** command you can verify the free space on each of the file systems.
 
 > **IMPORTANT:**
@@ -131,6 +138,7 @@ if [ $sn -eq 0 ]; then
 fi
 ```
 
+## Verification
 For testing purpose, you may ***reboot*** and ***telnet*** to the device afterwards.
 
 > IMPORTANT: The good thing is, that this hook even suvives an upgrade that is done afterwards (tested with v4.6.415145, release date 2022/04/27.):
@@ -165,7 +173,7 @@ Connection closed by foreign host.
 ```
 
 # Alternate Solution
-I found an easier solution to downgrade the firmware, install a hook and upgrade again. This solution is a bit easier and you don't have to manipultate any XML files. The following examples use the IP address 10.1.1.38 that is assigned to another Up2Stream Amp device in my home. You have to adjust this IP address and the one from your PC.
+I found an easier solution to downgrade the firmware, install a hook and upgrade again. You don't have to manipultate any XML files. The following examples use the IP address 10.1.1.38 for an Up2Stream Amp device in my home. You have to adjust this IP address and the one for your PC.
 
 ## Get Settings
 Get the current settings from the device. The following example is using WiFi with the build in IP address of the hotspot. On your LAN, the IP address is different:
@@ -177,7 +185,7 @@ Verify firmware (version), project, hardware before you continue.
 ## Download Firmware
 Download the firmware from the Internet to your PC for version 4.2.8020 from 2020/02/20 (20th of Feb 2020) and the latest version (currently 4.6.415145 from 2022/04/27). The following URLs may work for all Linkplay devices from Arylic / Rakoit with a ***Linkplay A31*** module. If you have a different Linkplay module, DON'T install this binary image, because you will likely brick your device. 
 
-It may work with other vendors, but it's your risk and therefore I recommend to follow the instructions in [Download Firmware](/download-firmware.md).
+It may work with other vendors (if they also use a Linkplay A31 module), but it's your risk and therefore I recommend to follow the instructions in [Download Firmware](/download-firmware.md).
 ```
 curl -O http://silenceota.linkplay.com/wifi_audio_image/NTeDAvvJzTUtBekHVnqJrB/20200220/a31rakoit_new_uImage_20200220
 curl -O http://silenceota.linkplay.com/wifi_audio_image/2ANRu7eyAEYtoo4NZPy9dL/20220427/a31rakoit_new_uImage_20220427
@@ -205,9 +213,9 @@ Install the firmware for version 4.2.8020 you've downloaded on your device.
 curl --user-agent Mozilla -v -F "file=@a31rakoit_new_uImage_20200220" http://10.10.10.254/cgi-bin/upload.cgi
 ```
 
-> Note: The installation is not finished when the message 'We are completely uploaded and fine' is shown. It's just the upload that has finished.
+> Note: The installation is not finished when the message 'We are completely uploaded and fine' is shown. It's just the upload that has finished, so it's safe to end curl (CTRL-C).
 
-The device uploads and installs the firmware. You may get some notification sounds if speakers are connected to your device. At the end it reboots. Wait for the device to come back. It may take about a minute for all steps. 
+The device uploads and installs the firmware. You may get some notification sounds if speakers are connected to your device. At the end it reboots. Wait for the device to come back. It may take about a minute for all these steps. 
 
 ## Connect PC to WiFi hotspot from your device
 Reconnect to the WiFi hotspot from your device with your PC as described above. If your device is connected by ethernet / LAN cable, then skip this step.
@@ -220,7 +228,7 @@ If your device is connected by ethernet / LAN cable, you have to adjust the IP a
 ```
 curl "http://10.10.10.254/httpapi.asp?command=getsyslog:ip:10.10.10.128/index.html;mkdir+/tmp/bin;wget+-O+/tmp/bin/busybox+-T+5+http://10.10.10.128/linkplay/a31/bin/busybox+-q;chmod+555+/tmp/bin/busybox;/tmp/bin/busybox+telnetd+-l/bin/ash;"
 ```
-Connect to your device via telnet from your PC (you may use putty):
+Connect to your device via telnet from your PC:
 ```
 telnet 10.10.10.254
 ```
@@ -236,44 +244,7 @@ nvram_set WPAPSK1 Plattfisch09
 ```
 
 ## Install a persistent hook
-Create a file in ***/vendor/user*** with the name ***usermod.sh*** and add a link to the ***user.sh*** script.
-```
-telnet 10.10.10.254
-cd /vendor/user
-cat <<>>
-
-#!/bin/sh
-
-sleep 10
-# get telnetd from full version of busybox and start in background
-mkdir /tmp/bin
-wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
-chmod 555 /tmp/bin/busybox
-ln -s /tmp/bin/busybox /tmp/bin/telnetd
-ln -s /tmp/bin/busybox /tmp/bin/ash
-/tmp/bin/telnetd telnetd -l/tmp/bin/ash &
-
-echo '#!/bin/sh' >/tmp/bin/help
-echo '/tmp/bin/busybox --help' >>/tmp/bin/help
-chmod 755 /tmp/bin/help
-
-# shut down WiFi after 5 min, but only if the device is connected by LAN (eth2) and got an IP addr on that interface
-sleep 300
-lanIPup=`ifconfig eth2 | grep 'inet addr:' | wc -l`
-if [ $lanIPup -eq 1 ]; then
-  ifconfig ra0 down
-  ifconfig apcli0 down
-  ifconfig apcli0 down
-fi
-unset lanIPup
-
-# Uncomment to disable sleep after 15 minutes (I haven't used this code - just an example from Crymeiriver)
-#while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
-
-echo '/vendor/user/usermod.sh &' >> user.sh
-echo '' >> user.sh
-```
-This code has been tested with a device that is only connected to the WiFi network at home.
+Follow instructions from above in section [Install Hook with code](/persistent-hook.md) . Don't forget to make the file executable and add a link to the new script in the existing ***user.sh*** script!
 
 ## Configure the device for your WiFi network at home
 If your device is connected by ethernet / LAN cable, then skip this step. Otherwise use an online tool to convert the SSID and password for your WiFi network at home from ASCII to hex. Then configure your device to connect to your WiWi network at home.
@@ -293,7 +264,7 @@ The Answer is either PROCESS or OK.
 --> if OK the variables shown below are added to NVRAM
 
 ## Verify settings
-You may verify the settings with the following command:
+You may verify the settings, because you it is easier to reinstall ***telnetd*** before you do the upgrade.
 ```
 telnet 10.1.1.38 (the IP address that was assigned to the device)
 
@@ -307,7 +278,7 @@ ralink_init show 2860 | grep ApCli
 
 reboot
 ```
-Wait for notification sound after device comes back.
+Wait for notification sound after device comes back. Telnet to the device again.
 
 ## Upgrade to latest firmware
 You may either wait or upgrade the firmware manually.
