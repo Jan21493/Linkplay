@@ -327,7 +327,8 @@ I've modified the FQDNs to point directly to the IP address of my web server and
     <UUID>FF31F09E</UUID>
     <major-url>http://10.1.1.22/linkplay/a31/UP2STREAM_PRO_V3/20200220/product.xml</major-url>
   </product>
-</productList>```
+</productList>
+```
 
 Next you download the specific ***product.xml*** file. The following URL is for the RP0011_WB60_S product ID, but except for the MCU all images look to be the same as for product ID RP0011_WB60, RP0011_WB60_S, UP2STREAM_PRO_V3, and others. I'm not sure, but all devices with the Linkplay A31 module might use the same firmware. You may download and compare the RP0011_WB60_S product below with your device (including MD5 checksums) and replace MCU part show below with the one from your device. It looks that older versions of the ***product.xml*** files and images are still available for download - you just need to know (or guess) the URLs.
 
