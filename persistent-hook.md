@@ -56,9 +56,14 @@ chmod 777 /vendor/user/ws_server
 > **Note:**
 > The ***telnetd*** is NOT installed, because the file is missing in the (read only) directory /usr/bin. 
 
-Just append the code below at the end of that file. On the device where the script was not present, I've just created it.
+Create a file in ***/vendor/user*** with the name ***usermod.sh*** and the following content. It has been tested with devices connected via ethernet and wireless. Please adjust the IP address for the web server (in my case 10.1.1.22).
 ```
-sleep 5
+cd /vendor/user
+cat <<\EOF >> /vendor/user/usermod.sh
+#!/bin/sh
+# user modification to allow telnet to the device and shut down WiFi after 5 minutes if device is connected by ethernet.
+
+sleep 10
 # get telnetd from full version of busybox and start in background
 mkdir /tmp/bin
 wget -O /tmp/bin/busybox -T 5 http://10.1.1.22/linkplay/a31/bin/busybox -q
@@ -83,7 +88,16 @@ unset lanIPup
 
 # Uncomment to disable sleep after 15 minutes (I haven't used this code - just an example from Crymeiriver)
 #while true; do sleep 60; echo 'AXX+MUT+000' >/dev/ttyS0; done &
+EOF
+
 ```
+Add a link to the new script in the existing ***user.sh*** script. Here's the content:
+```
+echo '' >> user.sh
+echo '/vendor/user/usermod.sh &' >> user.sh
+echo '' >> user.sh
+```
+
 The shutdown of the 'apcli0' WiFi interface does not work within the script when called in the first place, however it works a bit later if executed manually. So I added the 300 seconds (5 minutes) sleep and executed the command twice. Now it looks that it works as expected. I also added some code, so that the WiFi interface is NOT shut down if the Ethernet / LAN interface (eth2) does not get an IP address.
 
 Compared to the the section [Enable telnetd](/TELNETD.md), the code above has a little enhancement included, because the downloaded version of busybox is used as the shell ***/tmp/bin/ash*** instead of "build-in" version. You can see the difference, because the shell prompt message is ***BusyBox v1.23.2 (2016-09-27 07:54:34 CEST) built-in shell (ash)*** instead of ***BusyBox v1.12.1 () built-in shell (ash)***.
