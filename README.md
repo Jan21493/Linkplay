@@ -38,3 +38,6 @@ When the device reboots, any changes in ramfs are lost, however there is a way t
 
 ## Allow own shell scripts in cgi-bin
 By default the cgi-bin directory is read-only, but there is a way to make it writable to be able to install own shell scripts on the device. See [Allow own shell scripts in cgi-bin](/cgi-bin.md)
+
+## Discover undocumented commands
+By sniffing the communication between the 4steam app and the player, you may find new commands that are not documented so far. See [Sniff TLS communication between 4Stream app an player](/sniff-tls.md)
