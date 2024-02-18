@@ -39,7 +39,7 @@ checkEmail = mail@linkplay.com
 cert = /tmp/st7374756E6E656C.pem
 CAfile = /tmp/st7374756E6E656C_ca.pem
 ```
-![Wireshark screenshot](pictures/Wireshark - TLS decoded.png)
+![Wireshark screenshot](/pictures/Wireshark - TLS decoded.png)
 
 The answer to the requests can be seen in Wireshark by following the TLS stream, but it's also possible to try the discovered command directly with curl:
 ```
