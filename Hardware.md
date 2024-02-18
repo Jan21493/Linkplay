@@ -140,6 +140,7 @@ wget -O /tmp/bin/file -T 5 'http://10.1.1.22/a31/bin/file';/bin/chmod 777 /tmp/b
 # on Up2Stream device:
 wget -O /tmp/bin/strings -T 5 'http://10.1.1.22/a31/bin/strings';/bin/chmod 777 /tmp/bin/strings
 ```
+
 Here are some code snippets from a script on the device (can't remember any details). It looks that the commands for NTP are not working anymore, also the commands to switch power for the WiFi interface off:
 ```
 srv=`nvram_get 2860 NTPServerIP`
