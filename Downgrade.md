@@ -57,6 +57,15 @@ The following table lists some of the IDs
 | RP0016_S50PRO_S | Arylic S50 Pro  |
 | UP2STREAM_PRO_V3 | Arylic Up2Stream Pro v3 |
 
+There are other download sites for other products. You may try:
+```
+https://awsota.linkplay.com/wifi_audio_image/products.xml
+http://silenceota.linkplay.com/wifi_audio_image_v2/products.xml
+https://old-ota-redirect.linkplay.co/wifi_audio_image/products.xml
+http://old-ota-redirect.linkplay.co/wifi_audio_image_7688/
+```
+In the next step the player downloads the specific XML file for its own product ID, e.g. for an older Arylic Up2Stream Amp from the ***\<major-url\>*** that is matching the product ID.
+
 ```
 curl -O http://ota.rakoit.com/release/RP0011_WB60/product.xml
 ```
