@@ -18,6 +18,9 @@ https://developer.arylic.com/httpapi/#http-api
 Reverse Engineering by Crymeiriver:
 https://github.com/Crymeiriver/LS150/blob/master/README.md
 
+Alternative firmware for the A31 module by hn:
+https://github.com/hn/linkplay-a31
+
 ## Enable telnetd
 To get started exploring these devices, a security vulnerability had to be exploited to install a telnetd. [Enable telnetd](/TELNETD.md)
 
