@@ -213,7 +213,7 @@ Create the file **_/etc/fw_env.config_** with the following content, e.g. with v
 ```
 cat <<\EOF > /etc/fw_env.config 
 # MTD device name       Device offset   Env. size       Flash sector size
-/dev/mtd2 0x02000 0x4000 0x4000
+/dev/mtd2 0x02000 0x4000 0x1000
 EOF
 mkdir /var/lock
 ```
